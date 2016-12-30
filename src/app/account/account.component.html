@@ -1,0 +1,32 @@
+<p>Account Works!</p>
+
+
+<div class="row">
+      <div class="col-md-6">
+      <typeahead id="genre-filter" #genresDropdown
+        [list]="genres"
+        [searchProperty]="'name'" 
+        [displayProperty]="'name'"
+        [enableMultiSelect]='true'
+        [maxSuggestions]="10"
+        [(selectedSuggestions)]="selectedGenres"
+        (suggestionSelected)="filterByGenres($event)"
+        placeholder="- filter genres -">
+    </typeahead>
+    </div>
+</div>
+
+<!--data-isotope='{ "itemSelector": ".element-item", "layoutMode": "fitRows"}'-->
+<div class="grid">
+    
+        <div class="grid-item" [class.isNew]="artist.isNew" *ngFor="let artist of artistsVisible">
+            <div class="thumbnail placeholder">
+                <img data-src="{{artist.images[0] ? artist.images[0].url : ''}}"  alt="{{ artist.name }}" 
+                    class="img-thumbnail img-responsive">
+                <div class="caption">
+                    <h4>{{ artist.name }}</h4>
+                </div>
+            </div>
+        </div>
+      
+</div>

@@ -1,0 +1,14 @@
+p { color :lime; }
+.grid-item { width: 14%; }
+.isNew {display:none;}
+.thumbnail { 
+    border-radius: 0;
+    margin-bottom: -1px; 
+    .img-thumbnail{
+        border-radius: 50%;
+        width: 100px;
+        height:100px;
+    }
+    h4{
+    }    
+}

@@ -1,0 +1,68 @@
+
+<div class="typeahead" #container>
+    
+
+    <button class="btn btn-default dropdown-toggle" type="button"  (mousedown)="inputFocus($event)" style="" 
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" #dropdown>
+         <div [hidden]="displayText && displayText.length > 0" style="text-align:center; float: left; width: 90%; overflow:hidden;" >- Select -</div>
+         <div style="width: 90%; float:left; overflow: hidden;">{{displayText}}</div>
+        <span class="caret" ></span>
+    </button>
+
+    <!--<div class="input-group" (mousedown)="inputFocus($event)">
+        <span> {{ input}} </span>
+            <span class="input-group-addon"  id="basic-addon1"><i class="fa fa-caret-down"></i></span>
+    </div>-->  
+
+    <div class="typeahead-filter" [hidden]="!areSuggestionsVisible"> 
+        <div class="input-group" >
+            
+                <span class="input-group-addon"> <i class="fa fa-filter"></i></span>
+                <input type="text" class="form-control input-sm" 
+                    #inputElement
+                    [(ngModel)]="filter"
+                    placeholder="Filter"
+                    type="text"
+                    [focus]="filterFocused"
+                    [ngClass]="{'typeahead-input-has-selection': hasSelection()}"
+                    typeahead="off"
+                    spellcheck="false"
+                    (keyup)="inputKeyUp($event)"
+                    (keydown)="inputKeyDown($event)"
+                    (blur)="inputBlur($event)"
+                    aria-describedby="basic-addon1">
+        </div>
+
+    </div>
+
+
+    <div class="typeahead-select-buttons" [hidden]="!areSuggestionsVisible || !enableMultiSelect" >
+        <div class="btn-group btn-group-justified" role="group" >
+            <button type="button" (mousedown)="selectAll()" class="btn btn-primary" style="width:50%;"> <i class="fa fa-check-square-o"></i>&nbsp;<small>Select All</small></button>
+            <button type="button" (mousedown)="selectNone()" class="btn btn-primary" style="width:50%;"> <i class="fa fa-square-o"></i>&nbsp;<small>Select None</small></button>
+        </div>
+    </div>
+
+    <div class="typeahead-select-buttons" [hidden]="!areSuggestionsVisible || enableMultiSelect" >
+            <button style="width:100%;" type="button" (mousedown)="selectNone()" class="btn btn-primary" > <i class="fa fa-square-o"></i>&nbsp;Clear Selection</button>
+    </div>
+
+      <div #suggestionsContainer id="suggestionsContainer" class="noselect"
+        [hidden]="!areSuggestionsVisible">
+
+
+        <ul (mouseout)="suggestionsMouseOut($event)" 
+            (mouseleave)="suggestionsMouseLeave($event)" class="list-group">
+          <li *ngFor="let suggestion of suggestions"
+            (mouseover)="suggestionMouseOver(suggestion)"
+            (mousedown)="suggestionMouseDown(suggestion)"
+            [ngClass]="{'active': activeSuggestion===suggestion || isSelected(suggestion), 'list-group-item': true}">
+                     
+                <i style="padding:3px;" [ngClass]="{'fa': true, 'fa-check-circle-o': isSelected(suggestion), 'fa-circle-o': !isSelected(suggestion)}"></i>
+                {{ suggestion[displayProperty] }}
+
+            </li>
+        </ul>
+      </div>
+
+</div> 
