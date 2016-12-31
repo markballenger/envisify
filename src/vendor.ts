@@ -18,4 +18,5 @@ import 'bootstrap/dist/js/bootstrap.js';
 //import 'isotope-layout/dist/isotope.pkgd.js';
 import 'lodash';
 import 'angular2-virtual-scroll';
+import 'angular2-logger';
 import 'ng2-webstorage';

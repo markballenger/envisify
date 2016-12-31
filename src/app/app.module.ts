@@ -16,7 +16,6 @@ import { ApiHttpClient } from './shared/apiHttpClient';
 import { Typeahead } from './shared/typeahead/components/typeahead.component';
 import { FocusDirective } from './shared/focus/focus';
 import { VirtualScrollModule } from 'angular2-virtual-scroll';
-import { ListItem } from './shared/list-item/list-item';
 import { ListItemComponent } from './shared/list-item/list-item';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
