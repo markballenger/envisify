@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Logger } from 'angular2-logger/core';
+//import { Logger } from 'angular2-logger/core';
 
 @Component({
   selector: 'my-home',
@@ -8,14 +8,14 @@ import { Logger } from 'angular2-logger/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private logger: Logger) {
+  constructor(/*private logger: Logger*/) {
     // Do stuff
-    logger.level = logger.Level.LOG;
+    //logger.level = logger.Level.LOG;
   }
 
   ngOnInit() {
     console.log('Hello Home');
-    this.logger.info('Hello home');
+    //this.logger.info('Hello home');
   }
 
 }
