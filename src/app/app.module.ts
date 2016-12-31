@@ -11,7 +11,7 @@ import { AccountComponent } from './account/account.component';
 import { ApiService } from './shared';
 import { routing } from './app.routing';
 import { AuthConfigService }  from './shared/authConfig.service';
-import { Logger } from 'angular2-logger/core';
+//import { Logger } from 'angular2-logger/core';
 import { ApiHttpClient } from './shared/apiHttpClient';
 import { Typeahead } from './shared/typeahead/components/typeahead.component';
 import { FocusDirective } from './shared/focus/focus';
@@ -40,7 +40,7 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
   ],
   providers: [
     ApiService,
-    Logger,
+    //Logger,
     ApiHttpClient,
     AuthConfigService,
     { provide: 'Window',  useValue: window }  

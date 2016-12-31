@@ -1,7 +1,7 @@
 import { Injectable} from '@angular/core';
 import { Response, Http, Headers} from '@angular/http';
 import { AuthConfigService } from './authConfig.service';
-import { Logger } from 'angular2-logger/core';
+//import { Logger } from 'angular2-logger/core';
 import { Observable} from 'rxjs';
 
 
@@ -12,10 +12,10 @@ export class ApiHttpClient {
 
   constructor(
     private http: Http,
-    private authConfig: AuthConfigService, 
-    private logger: Logger) {
+    private authConfig: AuthConfigService 
+    /*private logger: Logger*/) {
 
-      logger.level = logger.Level.ERROR;
+      //logger.level = logger.Level.ERROR;
 
   }
 
@@ -35,8 +35,8 @@ export class ApiHttpClient {
     }).map((res: Response) =>{
         
         // log stuff
-        this.logger.info('GET: /' + absoluteUrl);
-        this.logger.info(res); 
+        //this.logger.info('GET: /' + absoluteUrl);
+        //this.logger.info(res); 
         
         return res;
     });  

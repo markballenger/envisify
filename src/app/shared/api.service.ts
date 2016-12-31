@@ -6,7 +6,7 @@ import { Artist } from './../models/artist';
 import { LocalStorage, LocalStorageService } from 'ng2-webstorage';
 import { AuthConfigService } from './authConfig.service';
 import { ApiHttpClient } from './apiHttpClient';
-import { Logger } from 'angular2-logger/core';
+//import { Logger } from 'angular2-logger/core';
 
 interface IMessagesOperation extends Function {
   (artists: Artist[]): Artist[];
@@ -26,10 +26,10 @@ export class ApiService {
     private http:ApiHttpClient, 
     private storage: LocalStorageService, 
     private authConfig: AuthConfigService,
-    private logger: Logger,
+    //private logger: Logger,
     @Inject('Window') window: Window){
       
-      this.logger.level = logger.Level.ERROR;
+      //this.logger.level = logger.Level.ERROR;
       
   } 
 
@@ -81,7 +81,7 @@ export class ApiService {
   //
   public mapArtists(res: Response): Artist[]{
     let json = res.json();
-    this.logger.info(json);
+    //this.logger.info(json);
     return json.artists.items;
   }
 

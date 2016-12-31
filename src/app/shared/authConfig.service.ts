@@ -1,19 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { LocalStorage, SessionStorage, LocalStorageService } from 'ng2-webstorage';
-import { Logger } from 'angular2-logger/core';
+//import { Logger } from 'angular2-logger/core';
 
 @Injectable()
 export class AuthConfigService {
   
-  private baseUri: string = 'http://localhost:8080/';
+  private baseUri: string = process.env.NODE_ENV === 'dev' ? 'http://localhost:8080/' : 'https://envisify.heroku.com';
 
   // the spotify access token fetched from the route params handed from the server's redirect
   @LocalStorage() 
   public access_token: string;
 
-  constructor(public http:Http, protected storage: LocalStorageService, @Inject('Window') protected window: Window, private logger: Logger){
-      logger.level = logger.Level.LOG;
+  constructor(public http:Http, 
+    protected storage: LocalStorageService, 
+    @Inject('Window') protected window: Window 
+    /*private logger: Logger*/){
+      //logger.level = logger.Level.LOG;
   } 
 
 
