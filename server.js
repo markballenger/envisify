@@ -16,13 +16,18 @@ process.env.PWD = process.cwd();
 
 var client_id = '96d2092fa0ad4ceca884cc06551b3446'; // spotify client id
 var client_secret = 'f6632cdf53b44729ad860f414b04424f'; // spotify secret
-var redirect_uri = 'http://localhost:8080/callback'; // Your redirect uri
+var redirect_uri = 'https://envisify.heroku.com/callback'; // Your redirect uri
 
 var port = process.env.PORT || 8080;
 var environment = process.env.NODE_ENV || 'dev';
 
+if(environment === 'dev')
+  redirect_uri = 'http://localhost:8080/callback';
+
 console.log('port: ' + port);
-console.log('env: ' + environment);
+console.log('env: ' + environment);     
+console.log('redirect: ' + redirect_uri);
+console.log('cwd: ' + process.env.PWD);
 
 var stateKey = 'spotify_auth_state';
 var app = express();
