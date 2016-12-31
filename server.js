@@ -11,6 +11,7 @@ var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+process.env.PWD = process.cwd()
 
 var client_id = '96d2092fa0ad4ceca884cc06551b3446'; // spotify client id
 var client_secret = 'f6632cdf53b44729ad860f414b04424f'; // spotify secret
@@ -59,7 +60,7 @@ var generateRandomString = function(length) {
 //
 // setup static express directories to serve up
 //
-app.use(express.static(__dirname + '/dist'))
+app.use(express.static(process.env.PWD + '/dist'))
    .use(cookieParser())
    .use(function(req, res, next){
       // enable CORS for dev so that we can work on browsersync's port  
