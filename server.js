@@ -21,6 +21,9 @@ var redirect_uri = 'http://localhost:8080/callback'; // Your redirect uri
 var port = process.env.PORT || 8080;
 var environment = process.env.NODE_ENV || 'dev';
 
+console.log('port: ' + port);
+console.log('env: ' + environment);
+
 var stateKey = 'spotify_auth_state';
 var app = express();
 
