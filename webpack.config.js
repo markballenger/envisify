@@ -182,16 +182,6 @@ module.exports = function makeWebpackConfig() {
       }
     }),
 
-    // use browsersync when running with express
-    // https://www.npmjs.com/package/browser-sync-webpack-plugin
-    new BrowserSyncPlugin({
-      // browse to http://localhost:3000/ during development, 
-      // ./public directory is being served 
-      host: 'localhost',
-      port: 3000,
-      proxy: 'http://localhost:8080'
-    }),
-
     // Workaround needed for angular 2 angular/angular#11580
       new webpack.ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
@@ -239,8 +229,19 @@ module.exports = function makeWebpackConfig() {
     })
   ];
 
+
   if (!isTest && !isProd) {
-      config.plugins.push(new DashboardPlugin());
+    config.plugins.push(new DashboardPlugin());
+
+    // use browsersync when running with express
+    // https://www.npmjs.com/package/browser-sync-webpack-plugin
+    config.plugins.push(new BrowserSyncPlugin({
+      // browse to http://localhost:3000/ during development, 
+      // ./public directory is being served 
+      host: 'localhost',
+      port: 3000,
+      proxy: 'http://localhost:8080'
+    }));
   }
 
   if (!isTest && !isTestWatch) {
