@@ -16,7 +16,7 @@ process.env.PWD = process.cwd();
 
 var client_id = '96d2092fa0ad4ceca884cc06551b3446'; // spotify client id
 var client_secret = 'f6632cdf53b44729ad860f414b04424f'; // spotify secret
-var redirect_uri = 'https://envisify.heroku.com/callback'; // Your redirect uri
+var redirect_uri = 'https://envisify.herokuapp.com/callback'; // Your redirect uri
 
 var port = process.env.PORT || 8080;
 var environment = process.env.ENV || 'dev';
