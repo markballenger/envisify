@@ -6,7 +6,7 @@ import { LocalStorage, SessionStorage, LocalStorageService } from 'ng2-webstorag
 @Injectable()
 export class AuthConfigService {
   
-  private baseUri: string = process.env.NODE_ENV === 'dev' ? 'http://localhost:8080/' : 'https://envisify.heroku.com';
+  private baseUri: string = (process.env.ENV === 'dev') ? 'http://localhost:8080/' : 'https://envisify.heroku.com/';
 
   // the spotify access token fetched from the route params handed from the server's redirect
   @LocalStorage() 

@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(){
+    console.log('process.env.ENV: ' + process.env.ENV);
   }
 
 }
