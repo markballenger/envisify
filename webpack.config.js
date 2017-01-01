@@ -20,7 +20,7 @@ var path = require('path');
 var ENV = process.env.npm_lifecycle_event;
 var isTestWatch = ENV === 'test-watch';
 var isTest = ENV === 'test' || isTestWatch;
-var isProd = (ENV === 'build') || (ENV === 'heroku-postbuild');
+var isProd = (ENV === 'build') || (ENV === 'heroku-postbuild') || (ENV === 'start');
 
 module.exports = function makeWebpackConfig() {
   /**
