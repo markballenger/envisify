@@ -1,10 +1,8 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { Artist } from './../models/artist';
-import { Genre } from './../models/genre';
+import { Artist, Genre } from './../models';
 import { ApiService } from './../shared/api.service';
 import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from 'ng2-webstorage';
-import { HostListener } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 declare var Isotope: any;
@@ -18,11 +16,6 @@ declare var Holder: any;
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
-
-    @HostListener('window:scroll', ['$event'])
-    onScroll(){
-        //this.artistsVisible.concat(_.take(_.skip(this.artists, this.artistsVisible.length), 10));
-    }
 
     artists : Artist[];
     artistsVisible: Artist[];
@@ -144,10 +137,8 @@ export class AccountComponent implements OnInit {
     }
 
     //
-    anyGenres(genreList, genre){
-        _.some(genreList, g=> g.name === genre);
-    }
- 
+    // busy: handles ui things when toggling busy
+    //
     busy(isBusy: boolean){
         this.isoVisible = !isBusy;
     }

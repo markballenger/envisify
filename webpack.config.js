@@ -21,7 +21,6 @@ var ENV = process.env.npm_lifecycle_event;
 var isTestWatch = ENV === 'test-watch';
 var isTest = ENV === 'test' || isTestWatch;
 var isProd = ENV === 'build';
-var npmDir = path.join(__dirname, "node_modules")
 
 module.exports = function makeWebpackConfig() {
   /**
@@ -177,6 +176,7 @@ module.exports = function makeWebpackConfig() {
     // Reference: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
     new webpack.DefinePlugin({
       // Environment helpers
+      ENV: ENV,
       'process.env': {
         ENV: JSON.stringify(ENV)
       }
@@ -189,14 +189,7 @@ module.exports = function makeWebpackConfig() {
       // ./public directory is being served 
       host: 'localhost',
       port: 3000,
-      server: { 
-        baseDir: ['dist'],
-        middleware: function(req, res, next){
-          // add headers as needed here like so
-          // res.setHeader('the-header-name', 'some-value');
-          next();
-        }
-     }
+      proxy: 'http://localhost:8080'
     }),
 
     // Workaround needed for angular 2 angular/angular#11580
@@ -206,8 +199,9 @@ module.exports = function makeWebpackConfig() {
         root('./src') // location of your src
       ),
 
-    // setup jquery for plugins
+    // setup globals
     new webpack.ProvidePlugin({
+        d3: 'd3',
         $: "jquery",
         jQuery: "jquery"
     }),
@@ -318,6 +312,5 @@ module.exports = function makeWebpackConfig() {
 function root(args) {
   args = Array.prototype.slice.call(arguments, 0);
   var result = path.join.apply(path, [__dirname].concat(args));
-  console.log('root is: ' + result);
   return result;
 }

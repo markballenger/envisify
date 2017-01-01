@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { AccountComponent } from './account/account.component';
+import { BubbleComponent } from './bubble/bubble.component';
 import { ApiService } from './shared';
 import { routing } from './app.routing';
 import { AuthConfigService }  from './shared/authConfig.service';
@@ -34,6 +35,7 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
     HomeComponent,
     AboutComponent,
     AccountComponent,
+    BubbleComponent,
     Typeahead,
     ListItemComponent,
     FocusDirective

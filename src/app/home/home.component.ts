@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from './../shared/api.service';
 //import { Logger } from 'angular2-logger/core';
 
 @Component({
@@ -8,12 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(/*private logger: Logger*/) {
+  constructor(protected api:ApiService/*private logger: Logger*/) {
     // Do stuff
     //logger.level = logger.Level.LOG;
   }
 
   ngOnInit() {
+  
+    // initialize an api call to login
+    this.api.getAllArtists().subscribe();
   }
 
 }

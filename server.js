@@ -19,7 +19,7 @@ var client_secret = 'f6632cdf53b44729ad860f414b04424f'; // spotify secret
 var redirect_uri = 'https://envisify.heroku.com/callback'; // Your redirect uri
 
 var port = process.env.PORT || 8080;
-var environment = process.env.NODE_ENV || 'dev';
+var environment = process.env.ENV || 'dev';
 
 if(environment === 'dev')
   redirect_uri = 'http://localhost:8080/callback';
@@ -114,7 +114,7 @@ app.get('/callback', function(req, res) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
-
+  
   if (state === null || state !== storedState) {
     res.redirect('/#' +
       querystring.stringify({
@@ -152,12 +152,13 @@ app.get('/callback', function(req, res) {
         // //   console.log(body);
         // // });
 
-        // determine the base url to use based on the environment
-        // we have to do this to deal with browsersync 
-        var baseUri = environment === 'dev' ? 'http://localhost:3000' : ''; 
         
+        // determine the base url to use based on the environment
+        // we have to do this to deal maintain staying on the browsersync proxy
+        var baseUri = environment === 'dev' ? 'http://localhost:3000' : ''; 
+
         // we can also pass the token to the browser to make requests from there
-        res.redirect(baseUri + '/#/account;' +
+        res.redirect(baseUri + '/#/home;' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token

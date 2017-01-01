@@ -19,3 +19,4 @@ import 'bootstrap/dist/js/bootstrap.js';
 import 'lodash';
 import 'angular2-virtual-scroll';
 import 'ng2-webstorage';
+import 'd3';
