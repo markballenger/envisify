@@ -33,7 +33,7 @@ var stateKey = 'spotify_auth_state';
 var app = express();
 
 // only load this middleware in dev mode
-if(environment == 'dev'){
+if(environment === 'dev'){
   var webpackMiddleware = require('webpack-dev-middleware');
   var webpack = require('webpack');
   var config = require('./webpack.config');

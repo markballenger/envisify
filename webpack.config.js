@@ -20,7 +20,7 @@ var path = require('path');
 var ENV = process.env.npm_lifecycle_event;
 var isTestWatch = ENV === 'test-watch';
 var isTest = ENV === 'test' || isTestWatch;
-var isProd = ENV === 'build';
+var isProd = (ENV === 'build') || (ENV === 'heroku-postbuild');
 
 module.exports = function makeWebpackConfig() {
   /**
@@ -297,12 +297,12 @@ module.exports = function makeWebpackConfig() {
    * Reference: http://webpack.github.io/docs/configuration.html#devserver
    * Reference: http://webpack.github.io/docs/webpack-dev-server.html
    */
-  config.devServer = {
+  /*config.devServer = {
     contentBase: './src/public',
     historyApiFallback: true,
     quiet: true,
     stats: 'minimal' // none (or false), errors-only, minimal, normal (or true) and verbose
-  };
+  };*/
 
   return config;
 }();
