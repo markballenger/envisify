@@ -1,5 +1,5 @@
 export class Genre {
-  public count: number
+  public count: number = 0;
   constructor(public name: string, public id: string){
 
   }

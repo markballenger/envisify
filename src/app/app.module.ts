@@ -11,12 +11,12 @@ import { AccountComponent } from './account/account.component';
 import { BubbleComponent } from './bubble/bubble.component';
 import { ApiService } from './shared';
 import { routing } from './app.routing';
-import { AuthConfigService }  from './shared/authConfig.service';
+import { AuthConfigService, UtilsService }  from './shared';
 //import { Logger } from 'angular2-logger/core';
 import { ApiHttpClient } from './shared/apiHttpClient';
 import { Typeahead } from './shared/typeahead/components/typeahead.component';
 import { FocusDirective } from './shared/focus/focus';
-import { VirtualScrollModule } from 'angular2-virtual-scroll';
+//import { VirtualScrollModule } from 'angular2-virtual-scroll';
 import { ListItemComponent } from './shared/list-item/list-item';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
@@ -27,8 +27,8 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
     HttpModule,
     FormsModule,
     routing,
-    Ng2Webstorage,
-    VirtualScrollModule
+    Ng2Webstorage
+    //VirtualScrollModule
   ],
   declarations: [
     AppComponent,
@@ -45,6 +45,7 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
     //Logger,
     ApiHttpClient,
     AuthConfigService,
+    UtilsService,
     { provide: 'Window',  useValue: window }  
   ],
   bootstrap: [AppComponent]

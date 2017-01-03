@@ -78,6 +78,10 @@ module.exports = function makeWebpackConfig() {
     extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html']
   };
 
+  config.externals = {
+    'd3': 'd3'
+  };
+
   var atlOptions = '';
   if (isTest && !isTestWatch) {
     // awesome-typescript-loader needs to output inlineSourceMap for code coverage to work with source maps.
@@ -191,7 +195,7 @@ module.exports = function makeWebpackConfig() {
 
     // setup globals
     new webpack.ProvidePlugin({
-        d3: 'd3',
+        //d3: 'd3',
         $: "jquery",
         jQuery: "jquery"
     }),
@@ -291,19 +295,6 @@ module.exports = function makeWebpackConfig() {
       }])
     );
   }
-
-
-  /**
-   * Dev server configuration
-   * Reference: http://webpack.github.io/docs/configuration.html#devserver
-   * Reference: http://webpack.github.io/docs/webpack-dev-server.html
-   */
-  /*config.devServer = {
-    contentBase: './src/public',
-    historyApiFallback: true,
-    quiet: true,
-    stats: 'minimal' // none (or false), errors-only, minimal, normal (or true) and verbose
-  };*/
 
   return config;
 }();

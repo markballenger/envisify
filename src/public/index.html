@@ -5,12 +5,18 @@
     <title>Envisify - Spotify Visualization</title>
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
 
+
+
     <base href="/">
   </head>
   <body>
         <my-app>Loading...</my-app>
-
+       
+        <!--webpack doesn't want to bring in isotope properly for some reason, just use cdn for now-->
         <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+
+        <!--something seems to be jacked about the older npm version of d3. just use cdn for now-->
+        <!--<script src="http://projects.delimited.io/experiments/force-bubbles/lib/d3.js"></script>-->
  
   </body>
 </html>

@@ -15,9 +15,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-  
-    // initialize an api call to login
-    this.api.getAllArtists().subscribe();
   }
 
 }

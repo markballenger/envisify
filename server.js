@@ -24,6 +24,11 @@ var environment = process.env.ENV || 'dev';
 if(environment === 'dev')
   redirect_uri = 'http://localhost:8080/callback';
 
+// determine the base url to use based on the environment
+// we have to do this to deal maintain staying on the browsersync proxy
+var baseUri = environment === 'dev' ? 'http://localhost:3000' : ''; 
+
+
 console.log('port: ' + port);
 console.log('env: ' + environment);     
 console.log('redirect: ' + redirect_uri);
@@ -46,8 +51,6 @@ if(environment === 'dev'){
     }
   }));
 }
-
-
 
 
 /**
@@ -102,6 +105,14 @@ app.get('/login', function(req, res) {
     }));
 });
 
+//
+// logout: simply removes the statekey cookie which will force 
+//  reauthentication on next request
+//
+app.get('/logout', function(req, res){
+  res.clearCookie(stateKey);
+  res.redirect(`${baseUri}/#/home`);
+});
 
 //
 // callback
@@ -140,7 +151,7 @@ app.get('/callback', function(req, res) {
 
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
-
+        
         // // var options = {
         // //   url: 'https://api.spotify.com/v1/me',
         // //   headers: { 'Authorization': 'Bearer ' + access_token },
@@ -152,17 +163,8 @@ app.get('/callback', function(req, res) {
         // //   console.log(body);
         // // });
 
-        
-        // determine the base url to use based on the environment
-        // we have to do this to deal maintain staying on the browsersync proxy
-        var baseUri = environment === 'dev' ? 'http://localhost:3000' : ''; 
-
         // we can also pass the token to the browser to make requests from there
-        res.redirect(baseUri + '/#/home;' +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
-          }));
+        res.redirect(`${baseUri}/#/home;access_token=${access_token};refresh_token=${refresh_token}`);
         
       } else {
         res.redirect('/#' +

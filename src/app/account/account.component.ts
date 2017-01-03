@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Artist, Genre } from './../models';
-import { ApiService } from './../shared/api.service';
+import { ApiService, UtilsService } from './../shared';
 import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from 'ng2-webstorage';
 import { Observable, Subject } from 'rxjs';
@@ -26,11 +26,13 @@ export class AccountComponent implements OnInit {
     iso : any;
     currentArtistIndex: number = 0;
     isoVisible: boolean = false;
+    selectedGenreDisplayText: string = '';
 
     constructor(
         protected api:ApiService,
         protected route: ActivatedRoute,
         protected storage: LocalStorageService,
+        protected utils: UtilsService,
         protected genresDropdown: ElementRef) {
     }
 
@@ -52,15 +54,29 @@ export class AccountComponent implements OnInit {
 
             // subscribe and wait for the return
             this.api.getAllArtists()
+                .finally(()=> {
+
+                    var routeValueGenre = this.utils.extractFromRoute('genre');
+
+                    if(routeValueGenre != null && routeValueGenre.length > 0){
+                            let foundGenre = _.find(this.genres, g=>g.name === routeValueGenre);
+                        if(foundGenre != null){
+                            this.selectedGenres.push(foundGenre);
+                            this.filterByGenres();
+                        }
+                    }
+
+                    this.setupIsotope();
+                })
                 .subscribe((artists: Artist[])=>{
                     this.artists = this.artists.concat(artists);
                     this.artistsVisible = _.take(this.artists, 30);
-                    this.populateGenres();
-                    this.setupIsotope();
+                    this.populateGenres(artists);
             });
         } else{
             this.setupIsotope();
         }
+
 
     }
 
@@ -96,8 +112,8 @@ export class AccountComponent implements OnInit {
     //
     // populateGenres
     //
-    populateGenres(){
-        _.each(this.artists, a=>{
+    populateGenres(artists: Artist[]){
+        _.each(artists, a=>{
             _.each(a.genres, genre=>{
                 if(!_.some(this.genres, g=> g.name === genre)){
                     this.genres.push(new Genre(genre, genre));
@@ -124,6 +140,7 @@ export class AccountComponent implements OnInit {
         this.busy(true);
         this.artistsVisible = _.filter(this.artists, a=> 
             this.hasMatchingGenres(a.genres, _.map(this.selectedGenres, 'name')));
+        this.selectedGenreDisplayText = _.map(this.selectedGenres, m=>m.id).join(', ');
         window.setTimeout(()=> this.setupIsotope(), 400);
     }
 
