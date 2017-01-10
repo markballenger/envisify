@@ -106,8 +106,8 @@ export class AuthConfigService {
 
   // helper to set local storage values
   private setLocalStorage(){
-        this.window.localStorage.setItem('access_token', this.access_token);
-        this.window.localStorage.setItem('refresh_token', this.refresh_token);
+      this.window.localStorage.setItem('access_token', this.access_token);
+      this.window.localStorage.setItem('refresh_token', this.refresh_token);
   }
 
   //

@@ -21,9 +21,25 @@
       }
 
       .list-group {
+        
         .list-group-item{
             padding: 8px;
             cursor: pointer;
+        }
+
+        .active{
+          
+        }
+
+        .is-hovered {
+          /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4c4c4c+0,595959+12,2b2b2b+76,1c1c1c+91,131313+100 */
+          background: rgb(76,76,76); /* Old browsers */
+          background: -moz-linear-gradient(top,  rgba(76,76,76,1) 0%, rgba(89,89,89,1) 12%, rgba(43,43,43,1) 76%, rgba(28,28,28,1) 91%, rgba(19,19,19,1) 100%); /* FF3.6-15 */
+          background: -webkit-linear-gradient(top,  rgba(76,76,76,1) 0%,rgba(89,89,89,1) 12%,rgba(43,43,43,1) 76%,rgba(28,28,28,1) 91%,rgba(19,19,19,1) 100%); /* Chrome10-25,Safari5.1-6 */
+          background: linear-gradient(to bottom,  rgba(76,76,76,1) 0%,rgba(89,89,89,1) 12%,rgba(43,43,43,1) 76%,rgba(28,28,28,1) 91%,rgba(19,19,19,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 ); /* IE6-9 */
+
+          color: #fff;
         }
       }
 
@@ -41,12 +57,13 @@
     }
 
     #suggestionsContainer {
-      max-height: 300px;
-      overflow-y: scroll;
-      overflow-x: hidden;
       width: 100%;
       position: absolute;
       z-index: 999;
+
+      vertical-scroll{
+        height: 300px !important;
+      }
 
       ul{
         margin-bottom: 0;

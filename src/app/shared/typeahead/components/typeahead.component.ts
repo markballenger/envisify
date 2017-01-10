@@ -68,6 +68,7 @@ export class Typeahead implements OnInit, AfterViewInit {
     /**
      * The displayText value.
      */
+    @Input()
     private displayText: string;
 
     /**
@@ -432,7 +433,7 @@ export class Typeahead implements OnInit, AfterViewInit {
      * whether the suggestion is in the list of selected suggestions
      */
     public isSelected(suggestion){
-        return _.some(this.selectedSuggestions, n=> n.id === suggestion.id);
+        return _.some(this.selectedSuggestions, n=> n.name === suggestion.name);
     }
 
     /**
@@ -450,10 +451,10 @@ export class Typeahead implements OnInit, AfterViewInit {
 
         // update the multi selection array accordingly
         if(suggestion){
-            if(!_.some(this.selectedSuggestions, x=> x.id === suggestion.id)){
+            if(!_.some(this.selectedSuggestions, x=> x.name === suggestion.name)){
                 this.selectedSuggestions.push(suggestion);
             } else{
-                let index = _.findIndex(this.selectedSuggestions, x=>x.id===suggestion.id);
+                let index = _.findIndex(this.selectedSuggestions, x=>x.name===suggestion.name);
                 this.selectedSuggestions.splice(index, 1);
             }
         }

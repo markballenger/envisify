@@ -17,6 +17,7 @@ export class ApiService {
   
   // a list of artists
   private artists: Observable<Artist[]>;
+  private relatedArtists: Observable<any[]>;
 
   // the spotify access token fetched from the route params handed from the server's redirect
   @LocalStorage() protected access_token: string = '';
@@ -39,14 +40,34 @@ export class ApiService {
   //
   public getArtists(): Observable<Artist[]>{
     if(!this.artists){
-
       this.artists = this.http.get('me/following?type=artist')
             .map((res: Response)=> this.mapArtists(res)) 
             .publishReplay(1) 
             .refCount();
-
     }
     return this.artists;
+  }
+
+  //
+  // getRelatedArtists
+  //
+  public getRelatedArtists(id: any): Observable<any[]>{
+    if(!this.relatedArtists){ 
+      this.relatedArtists = this.http.get(`artists/${id}/related-artists`)
+        .map((res: Response)=> this.mapRelatedArtists(res))
+        .publishReplay(1)
+        .refCount();
+    }
+    return this.relatedArtists;
+  }
+
+  //
+  // mapRelatedArtists
+  //
+  mapRelatedArtists(res: Response) : any[]{
+    let json = res.json();
+    //this.logger.info(json);
+    return json.artists;
   }
 
   // 
@@ -61,7 +82,6 @@ export class ApiService {
         .publishReplay()
         .refCount();
     }
-    console.log(this.artists);
     return this.artists;
   }
 

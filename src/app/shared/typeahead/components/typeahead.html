@@ -4,7 +4,7 @@
 
     <button class="btn btn-default dropdown-toggle" type="button"  (mousedown)="inputFocus($event)" style="" 
         data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" #dropdown>
-         <div [hidden]="displayText && displayText.length > 0" style="text-align:center; float: left; width: 90%; overflow:hidden;" >- Select -</div>
+         <div [hidden]="displayText && displayText.length > 0" style="text-align:center; float: left; width: 90%; overflow:hidden;" >{{placeholder}}</div>
          <div style="width: 90%; float:left; overflow: hidden;">{{displayText}}</div>
         <span class="caret" ></span>
     </button>
@@ -14,6 +14,11 @@
             <span class="input-group-addon"  id="basic-addon1"><i class="fa fa-caret-down"></i></span>
     </div>-->  
 
+
+      <div #suggestionsContainer id="suggestionsContainer" class="noselect"
+        [hidden]="!areSuggestionsVisible">
+
+
     <div class="typeahead-filter" [hidden]="!areSuggestionsVisible"> 
         <div class="input-group" >
             
@@ -21,7 +26,7 @@
                 <input type="text" class="form-control input-sm" 
                     #inputElement
                     [(ngModel)]="filter"
-                    placeholder="Filter"
+                    placeholder="{{placeholder || 'Filter'}}"
                     type="text"
                     [focus]="filterFocused"
                     [ngClass]="{'typeahead-input-has-selection': hasSelection()}"
@@ -47,22 +52,24 @@
             <button style="width:100%;" type="button" (mousedown)="selectNone()" class="btn btn-primary" > <i class="fa fa-square-o"></i>&nbsp;Clear Selection</button>
     </div>
 
-      <div #suggestionsContainer id="suggestionsContainer" class="noselect"
-        [hidden]="!areSuggestionsVisible">
 
+        <virtual-scroll 
+            (mouseout)="suggestionsMouseOut($event)" 
+            (mouseleave)="suggestionsMouseLeave($event)" 
+            [items]="suggestions" class="list-group"
+            (update)="scrollItems = $event"
+            (change)="indices = $event"
+            class="list-group">
 
-        <ul (mouseout)="suggestionsMouseOut($event)" 
-            (mouseleave)="suggestionsMouseLeave($event)" class="list-group">
-          <li *ngFor="let suggestion of suggestions"
-            (mouseover)="suggestionMouseOver(suggestion)"
-            (mousedown)="suggestionMouseDown(suggestion)"
-            [ngClass]="{'active': activeSuggestion===suggestion || isSelected(suggestion), 'list-group-item': true}">
-                     
-                <i style="padding:3px;" [ngClass]="{'fa': true, 'fa-check-circle-o': isSelected(suggestion), 'fa-circle-o': !isSelected(suggestion)}"></i>
-                {{ suggestion[displayProperty] }}
+            <list-item  
+                    (mouseover)="suggestionMouseOver(item)"   
+                    (mousedown)="suggestionMouseDown(item)"
+                    [ngClass]="{'active': isSelected(item), 'list-group-item': true, 'is-hovered': !isSelected(item) && activeSuggestion===item}"
+                    *ngFor="let item of scrollItems" [item]="item"></list-item>
 
-            </li>
-        </ul>
+        </virtual-scroll>
+
       </div>
 
 </div> 
+
