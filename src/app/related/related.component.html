@@ -1,0 +1,50 @@
+
+
+<div id="song_selection" class="control">
+<h3>Song</h3>
+<span [hidden]="!store.busy">store busy</span>
+<span [hidden]=""></span>
+<div class="col-md-6">
+    <typeahead id="artist-filter" 
+        [list]="store.allArtists | async"
+        [searchProperty]="'name'" 
+        [displayProperty]="'name'"
+        [displayText]="store.artistFilter | async"
+        [enableMultiSelect]='false'
+        [maxSuggestions]="10"
+        (selectedSuggestionsChange)="artistSelected($event)"
+        placeholder="- select an artist -">
+    </typeahead>
+</div>
+
+</div>
+<div id="controls">
+
+    <div id="layouts" class="control">
+        <h3>Layout</h3>
+        <a id="force" (click)="doLayout('force')" class="active">Force Directed</a>
+        <a id="radial" (click)="doLayout('radial')">Artists</a>
+    </div>
+
+    <div id="filters" class="control">
+        <h3>Filter</h3>
+        <a id="all" (click)="doFilter('all')" class="active">All</a>
+        <a id="popular" (click)="doFilter('popular')">Popular</a>
+        <a id="obscure" (click)="doFilter('obscure')">Obscure</a>
+    </div>
+
+    <div id="sorts" class="control">
+        <h3>Sort</h3>
+        <a id="songs" (click)="doSort('songs')" class="active">Songs</a>
+        <a id="links" (click)="doSort('links')">Links</a>
+    </div>
+
+    <div id="search_section" class="control">
+        <form id="search_form" action="" method="post">
+            <p class="search_title">Search <input type="text" class="text-input" id="search" value=""/></p>
+        </form>
+    </div>
+
+    <div id="vis"></div>
+
+</div>  

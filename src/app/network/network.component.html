@@ -1,0 +1,73 @@
+<div style="position: absolute; bottom:90px; right: 30px; color: #ccc; text-align:right;">
+<h1 >{{data.nodes[0]?.name}}</h1>
+<p>Popularity: {{data.nodes[0]?.popularity}}</p>
+<p>{{data.nodes[0]?.genres.join(', ')}}</p>
+</div>
+
+<div class="row">        
+        <!--<div class="col-md-6">
+            <typeahead id="genre-filter" #genresDropdown
+                [list]="store.genres | async"
+                [searchProperty]="'name'" 
+                [displayProperty]="'name'"
+                [enableMultiSelect]='false'
+                [displayText]="store.genreFilter | async"
+                [maxSuggestions]="10"
+                (selectedSuggestionsChange)="filterGenres($event)"
+                placeholder="- filter genres -">
+            </typeahead>
+        </div>-->
+
+        <div class="col-md-3">
+            <div class="well" >
+                <h3>Related Artists</h3>
+                <p>Explore related artists. Size is in relation to artist popularity.</p>
+                <i class="fa fa-circle" style="color: limegreen;"></i> In your library
+                <i class="fa fa-circle" style="color: red;"></i> Not in your library
+            </div>
+            <typeahead id="artist-filter"  
+                [list]="store.allArtists | async"
+                [searchProperty]="'name'" 
+                [displayProperty]="'name'"
+                [displayText]="store.artistFilter | async"
+                [enableMultiSelect]='false'
+                [maxSuggestions]="10"
+                (selectedSuggestionsChange)="$event.length > 0 && store.filterArtistsByName($event[0].name)"
+                placeholder="- select an artist -">
+            </typeahead>
+            <virtual-scroll 
+                [items]="related | async"
+                (update)="scrollItems = $event"
+                (change)="indices = $event">
+                <div class="list-group-item" *ngFor="let item of scrollItems">
+                    {{item.name}}
+                </div>
+            </virtual-scroll>
+
+        </div>
+
+    <!--<div class="grid" style="position:absolute; left:0; top: 100px; width: 40%;">
+        <artist-item *ngFor="let item of (related | async)" [artist]="item"> </artist-item>
+    </div>-->
+
+
+
+    <div class="col-md-9">
+        <div id="network"></div>
+    </div>
+
+</div>
+
+
+
+
+
+
+    <div [hidden]="true" style="position:absolute; right:0; top: 100px;">
+        <slider [min]="0" [max]="1" [(value)]="gravity" [valueStream]="d3Stream"></slider>
+        <slider [min]="0" [max]="1000" [(value)]="distance" [valueStream]="d3Stream"></slider>
+        <slider [min]="-1000" [max]="1000" [(value)]="charge" [valueStream]="d3Stream"></slider>
+        <slider [min]="200" [max]="2000" [(value)]="width" [valueStream]="d3Stream"></slider>
+        <slider [min]="200" [max]="1000" [(value)]="height" [valueStream]="d3Stream"></slider>
+        <slider [min]="0" [max]="20" [round]="true" [(value)]="relatedPerArtistCount" [valueStream]="d3Stream"></slider>
+    </div>

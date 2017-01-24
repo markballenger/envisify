@@ -1,0 +1,40 @@
+    <div id="navbar-secondary" class="navbar navbar-default navbar-fixed-top">
+        <div class="col-sm-4">
+            <typeahead id="genre-filter" #genresDropdown
+                [list]="store.genres | async"
+                [searchProperty]="'name'" 
+                [displayProperty]="'name'"
+                [enableMultiSelect]='false'
+                [maxSuggestions]="10"
+                (selectedSuggestionsChange)="store.filterArtistsByGenre($event)"
+                placeholder="- filter genres -">
+            </typeahead>
+        </div>
+        <div class="col-sm-4">
+            <div class="input-group">
+                <span class="input-group-addon" id="filter-by-name"><i class="fa fa-filter"></i></span>
+                <input type="text" class="form-control" 
+                    [formControl]="nameFilter"
+                    placeholder="filter by name" >
+            </div>        
+        </div>
+        <div class="col-sm-4">
+            <span id="artist-count">
+                {{(store.artistsFiltered | async).length}} {{store.genreFilter | async }} artists
+            </span>
+        </div>
+    </div>
+
+
+
+
+<virtual-scroll 
+    [items]="store.artistsFiltered | async"
+    (update)="scrollItems = $event"
+    (change)="indices = $event">
+    
+        <artist-item (click)="artistSelected(item)"  *ngFor="let item of scrollItems" [artist]="item"> </artist-item>
+
+</virtual-scroll>
+
+
