@@ -26,7 +26,7 @@
     "start-server": "npm run server",
     "start:hmr": "npm run server -- --hot",
     "postinstall-disabled": "npm run webdriver-update",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run install && npm run build"
   },
   "dependencies": {
     "@angular/common": "^2.4.1",
