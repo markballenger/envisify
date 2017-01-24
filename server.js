@@ -29,11 +29,6 @@ if(environment === 'dev')
 var baseUri = environment === 'dev' ? 'http://localhost:3000' : ''; 
 
 
-console.log('port: ' + port);
-console.log('env: ' + environment);     
-console.log('redirect: ' + redirect_uri);
-console.log('cwd: ' + process.env.PWD);
-
 var stateKey = 'spotify_auth_state';
 var app = express();
 
@@ -45,6 +40,7 @@ if(environment === 'dev'){
 
   app.use(webpackMiddleware(webpack(config), {
     publicPath: '/',
+    quiet: true,
     headers: { 'X-Custom-Webpack-Header': 'yes'}, 
     stats: {
       colors: true
@@ -204,5 +200,9 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+
+console.log('environment: ' + environment);     
+console.log('redirect_url: ' + redirect_uri);
+console.log('process.env.PWD: ' + process.env.PWD);
 console.log('Listening on ' + port);
 app.listen(port);

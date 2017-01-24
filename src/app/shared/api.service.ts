@@ -12,12 +12,14 @@ interface IMessagesOperation extends Function {
   (artists: Artist[]): Artist[];
 }
 
+declare var _ : any;
+
 @Injectable()
 export class ApiService {
   
   // a list of artists
   private artists: Observable<Artist[]>;
-  private relatedArtists: Observable<any[]>;
+  private relatedArtists: Observable<Artist[]>;
 
   // the spotify access token fetched from the route params handed from the server's redirect
   @LocalStorage() protected access_token: string = '';
@@ -33,6 +35,12 @@ export class ApiService {
       //this.logger.level = logger.Level.ERROR;
       
   } 
+
+  public test(){
+    Observable.create(observer =>{
+      
+    });
+  }
 
 
   //
@@ -51,22 +59,22 @@ export class ApiService {
   //
   // getRelatedArtists
   //
-  public getRelatedArtists(id: any): Observable<any[]>{
-    if(!this.relatedArtists){ 
-      this.relatedArtists = this.http.get(`artists/${id}/related-artists`)
-        .map((res: Response)=> this.mapRelatedArtists(res))
-        .publishReplay(1)
-        .refCount();
-    }
-    return this.relatedArtists;
+  public getRelatedArtists(id: string): Observable<Artist[]>{
+    return this.http.get(`artists/${id}/related-artists`)
+      .map((res: Response)=> this.mapRelatedArtists(res, id))
+      .publishReplay(1)
+      .refCount();
   }
 
   //
   // mapRelatedArtists
   //
-  mapRelatedArtists(res: Response) : any[]{
+  mapRelatedArtists(res: Response, id: string) : any[]{
     let json = res.json();
-    //this.logger.info(json);
+    _.each(json.artists, a=>{
+        a.relatedTo = id;
+        a.relatedArtists=this.getRelatedArtists(a.id);
+      });
     return json.artists;
   }
 
@@ -101,7 +109,7 @@ export class ApiService {
   //
   public mapArtists(res: Response): Artist[]{
     let json = res.json();
-    //this.logger.info(json);
+    _.each(json.artists.items, a=>a.relatedArtists = this.getRelatedArtists(a.id));
     return json.artists.items;
   }
 

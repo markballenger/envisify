@@ -10,6 +10,8 @@ declare var _ : any;
 @Injectable() 
 export class ApiStore {
 
+    public busy: boolean = true;
+
     private _allArtists: BehaviorSubject<Artist[]> = new BehaviorSubject([]);
     public allArtists: Observable<Artist[]> = this._allArtists.asObservable();
 
@@ -48,63 +50,16 @@ export class ApiStore {
                 // after all api subscribes are done, pump our observables
                 this._allArtists.next(artistsInit);
                 this._artistsFiltered.next(artistsInit);
+                this.busy = false;
             })
             .subscribe((a: Artist[])=>{
-                this.populateRelatedArtists(a);
                 artistsInit = artistsInit.concat(a);
                 this.populateGenres(a);
-            });
-
-        // // this.router.events
-        // //     .subscribe(d=>{
-        // //         let genreFilter = this.utils.getQueryFromUrl('genre', d.url);
-        // //         let foundGenre = _.find(this._genres.getValue(), {name: genreFilter});
-        // //         this.filterArtistsByGenre();
-        // //     });
-
-        // figure out how to subscribe to router observable of route
-        
-        
-        // var routeValueGenre = this.utils.extractFromRoute('genre');
-
-        // if(routeValueGenre != null && routeValueGenre.length > 0){
-        //         let foundGenre = _.find(this.genres, g=>g.name === routeValueGenre);
-        //     if(foundGenre != null){
-        //         this.selectedGenres.push(foundGenre);
-        //         this.filterByGenres();
-        //     }
-        // }
-
-    }
-
-    //
-    // populateRelatedArtists
-    //
-    private populateRelatedArtists(allArtists: Artist[]){
-        _.each(allArtists, a=>{
-
-            // specify that the artists exists in the user's library
-            a.existsInLibrary = true;
-            this.relatedRecursion(a, 1);            
-        });
-    }
-
-    private relatedRecursion(artist: any, depth: number){
-        this.api.getRelatedArtists(artist.id)
-            .subscribe((related: any[])=>{
-                artist.relatedArtists = related;
-                
-                // max depth of recursion (currently none)
-                if(depth < 1){
-                    _.each(artist.relatedArtists, x=>{
-                        this.relatedRecursion(x, depth++);
-                    });
-                }
             });
     }
     
     //
-    // populateGenres
+    // populateGenres: 
     //
     private populateGenres(artists: Artist[]){
         
@@ -132,6 +87,8 @@ export class ApiStore {
     // filterArtists: applies filter to exposed observable
     //
     public filterArtistsByGenre(genresFilter: Array<Genre>){
+        this.busy = true;
+        
         // set the cached value
         let genreStrings = _.map(genresFilter, 'name'); 
         this.genreFilterCache = genreStrings;
@@ -144,6 +101,7 @@ export class ApiStore {
         // broadcast
         this._artistsFiltered.next(artists);
         this._genreFilter.next(genreStrings.join(', '));    
+        this.busy = false;
     }
 
     // 
@@ -167,6 +125,8 @@ export class ApiStore {
     // filterArtistsbyName
     //
     public filterArtistsByName(artistName: string){
+        this.busy = true;
+
         // set the cached value
         this.artistNameFilterCache = artistName;
         
@@ -177,6 +137,7 @@ export class ApiStore {
 
         // broadcast
         this._artistsFiltered.next(artists);
+        this.busy = false;
     }
 
     // 

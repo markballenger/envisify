@@ -1,8 +1,8 @@
 import { Component, OnInit} from '@angular/core';
-import { ApiService } from './../shared';
+import { ApiService, ApiStore } from './../shared';
 import { Artist, Genre } from './../models';
 import {Router} from "@angular/router";
-
+import { Observable } from 'rxjs';
 
 declare var d3: any;
 declare var _: any;
@@ -15,29 +15,24 @@ declare var $: any;
 })
 export class BubbleComponent implements OnInit {
 
-    artists : Artist[];
-    genres: Genre[] = new Array<Genre>();
+    protected genres: Genre[] = new Array<Genre>();
 
-    constructor(private router:Router, private api: ApiService) {
+    constructor(private router:Router, private api: ApiService, private store: ApiStore) {
         // Do something with api
     }
 
     ngOnInit(){
 
-        if(!this.artists){
-
-            // start with an empty array
-            this.artists = new Array<Artist>();
-            this.genres = new Array<Genre>();
-
-            // subscribe and wait for the return
-            this.api.getAllArtists()
-                .finally(()=> this.setupBubbles2())
-                .subscribe((artists: Artist[])=>{
-                    this.artists = this.artists.concat(artists);
-                    this.populateGenres(artists);
-            });
-        }
+      this.store.genres
+        .subscribe(genres=>{
+          this.genres = genres;
+      });
+      
+      this.store.genres
+        .debounce(()=> Observable.timer(650))
+        .subscribe(genres=>{
+          this.setupBubbles2();
+      });
 
     }
 
@@ -50,11 +45,11 @@ export class BubbleComponent implements OnInit {
     private svg: any;
 
     setupBubbles2(){
-        var width = 1000, height = 1000;
+        var width = 500, height = 500;
 
         var fill = d3.scale.ordinal()
           .domain(["low", "medium", "high"])
-          .range(["#d84b2a", "#beccae", "#7aa25c"])
+          .range(["#31a354", "#74c476", "#c7e9c0"]) // todo: color service
 
         this.svg = d3.select("#chart").append("svg")
             .attr("width", width)
@@ -74,12 +69,12 @@ export class BubbleComponent implements OnInit {
         this.maxRadius = d3.max(_.map(this.genres, g=> g.radius));
 
         this.year_centers = {
-          "2008": {name:"2008", x: 150, y: 300},
-          "2009": {name:"2009", x: 550, y: 300},
-          "2010": {name:"2010", x: 900, y: 300}
+          "2008": {name:"2008", x: 150, y: 100},
+          "2009": {name:"2009", x: 250, y: 100},
+          "2010": {name:"2010", x: 400, y: 100}
         }
 
-        this.all_center = { "all": {name:"All Genres", x: 500, y: 300}};
+        this.all_center = { "all": {name:"All Genres", x: 250, y: 250}};
 
         this.nodes = this.svg.selectAll("circle")
           .data(this.genres);
@@ -103,7 +98,11 @@ export class BubbleComponent implements OnInit {
               $(this).popover('show');
            })
           .on("click", d=>{
-            this.router.navigate(['account', {genre: d.id}]);
+            this.removePopovers();
+            let genres = new Array<Genre>();
+            genres.push(d);
+            this.store.filterArtistsByGenre(genres);
+            this.router.navigate(['artists']);
           })
           .on("mouseout", d=> { this.removePopovers(); })
 
@@ -201,20 +200,6 @@ export class BubbleComponent implements OnInit {
           };
         }
 
-    //
-    // populateGenres
-    //
-    populateGenres(artists: Artist[]){
-        _.each(artists, a=>{
-            _.each(a.genres, genre=>{
-               let item = _.find(this.genres, g=>g.name === genre);
-               if(!item){
-                   item = new Genre(genre, genre);
-                    this.genres.push(item);
-               }
-               item.count++;
-            });
-        });
-    }
+
 
 }

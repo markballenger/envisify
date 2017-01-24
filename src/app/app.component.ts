@@ -1,17 +1,18 @@
-import { Component, OnInit} from '@angular/core';
-import { ApiService, AuthConfigService } from './shared';
+import { Component, OnInit, AfterViewInit} from '@angular/core';
+import { ApiStore, AuthConfigService } from './shared';
 import '../style/app.scss';
 
+declare var $ : any;
 
 @Component({
   selector: 'my-app', // <my-app></my-app>
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   url = 'https://github.com/preboot/angular2-webpack';
 
-  constructor(private api: ApiService, private authService: AuthConfigService) {
+  constructor(private store: ApiStore, private authService: AuthConfigService) {
     // Do something with api
   }
 
@@ -31,6 +32,21 @@ export class AppComponent implements OnInit {
     // then try grabbing the tokens in the uri if they are there
     this.authService.tryLoadTokens();
   }
+
+   /**
+   * perform stuff needed after the view has initialized
+   */
+    ngAfterViewInit(){
+
+        // close the small screen navbar flyout on click
+        $('#navbar ul li a').on('click', function(){
+            // only do this if the flyout is actually open
+            if($('header button.navbar-toggle').is(':visible') && $('#navbar').is(':visible')){
+                $('header button.navbar-toggle').click(); 
+            }   
+        });
+
+    }
 
   //
   // 

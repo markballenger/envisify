@@ -46,6 +46,7 @@ export class RadialPlacementService{
     //
     private place(key) {
         var value;
+        console.log(key);
         value = this.radialLocation(this._center, this._current, this._radius);
         this._values.set(key, value);
         this._current += this.increment;

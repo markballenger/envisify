@@ -1,0 +1,23 @@
+
+<div class="overlay">
+    <div class="overlay-inside">
+            <h1 id="home-heading"><i class="fa fa-eye fa-2x"></i>Envisify</h1>
+            <h1><small>Envisify is a little app that let's you explore your spotify 
+                collection. Find new artists, learn ensights about your existing 
+                tastes, whatever. Do with it what you want.</small></h1>
+    </div>
+</div>
+
+<!--data-isotope='{ "itemSelector": ".element-item", "layoutMode": "fitRows"}'-->
+<div  class="grid">
+    
+    <div class="grid-item" [class.grid-item2]="index % 2 === 0" [class.isNew]="artist.isNew" 
+        *ngFor="let artist of artists | async; let i = index">
+        <div class="xthumbnail xplaceholder">
+            <img data-src="{{artist.images[1] ? artist.images[1].url : ''}}"  alt="{{ artist.name }}" 
+                class="ximg-thumbnail ximg-responsive">
+        </div>
+    </div>
+      
+</div>
+

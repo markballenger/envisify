@@ -59,7 +59,7 @@
             [items]="suggestions" class="list-group"
             (update)="scrollItems = $event"
             (change)="indices = $event"
-            class="list-group">
+            class="list-group typeahead-scroll">
 
             <list-item  
                     (mouseover)="suggestionMouseOver(item)"   

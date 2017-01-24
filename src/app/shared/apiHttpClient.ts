@@ -51,7 +51,6 @@ export class ApiHttpClient {
     if(error.status === 401){
       // send them to the server for login to acquire a proper access token
       this.authConfig.login();
-      console.log(this.router.routerState);
       //this.getAbsolute(absoluteUrl);
       return;
     }

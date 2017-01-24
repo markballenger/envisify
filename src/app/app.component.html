@@ -9,17 +9,20 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Envisify</a>
+          <a class="navbar-brand" href="#"><i class="fa fa-eye fa-2x"></i>&nbsp;Envisify</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            
+             
                 <li><a [routerLink]="['']">Home</a></li>
-                <li><a [routerLink]="['about']">About</a></li>
-                <li><a [routerLink]="['account']">Artists</a></li>
-                <li><a [routerLink]="['bubble']">Genres</a></li>
+                <li><a [routerLink]="['artists']">My Artists</a></li>
+                <li><a [routerLink]="['bubble']">My Genres</a></li>
+                <li><a [routerLink]="['network']">Related</a></li>
+                <li><a [routerLink]="['artist-bubble']">Artists by Popularity</a></li>
+                <!--<li><a [routerLink]="['chord']">Chord</a></li>-->
+                <!--<li><a [routerLink]="['related']">Related</a></li>-->
+                <li><a [routerLink]="['test']">Test</a></li>
 
-            
             <!--<li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -34,20 +37,22 @@
             </li>-->
           </ul>
           <ul class="nav navbar-nav navbar-right">
+            <li>
+                <div [hidden]="!store.busy">
+                  <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </li>
             <li class="active">
-              
-    <button *ngIf="isAuthenticated" class="btn" (click)="logout()">Logout</button>
-    
+              <button *ngIf="isAuthenticated" class="btn login" (click)="logout()">Logout</button>
             </li>
-    <li><button *ngIf="!isAuthenticated" class="btn" (click)="login()">Login</button></li>
-    
+            <li>
+              <button *ngIf="!isAuthenticated" class="btn login" (click)="login()">Login</button>
+            </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-
-
-
 
 </header>
 <main>
@@ -59,8 +64,8 @@
 
   <router-outlet></router-outlet>
 </main>
-<footer>
+<!--<footer>
   Mark Ballenger   
-</footer>
+</footer>-->
 
 

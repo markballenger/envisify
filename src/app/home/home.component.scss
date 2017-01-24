@@ -1,4 +1,68 @@
-// component styles are encapsulated and only applied to their components
-* {
-  color: #FFEF00;
+main {
+}
+body{
+  overflow: hidden;
+}
+.grid{
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position:relative;
+  top: -12px;
+}
+.grid-item { 
+  width: 20%;
+  img{
+    width: 100%;
+  }
+}
+.grid-item2 {
+  width: 10%;
+  img { 
+    width: 100%;  
+  }
+}
+
+
+#home-heading 
+{
+  position: relative; 
+  left: -15px;
+
+  .fa-2x {
+    position: relative; 
+    left:-10px;
+    top: 10px;
+  }
+}
+
+
+.overlay{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#45484d+0,000000+100&0.8+0,1+100;Black+3D+%231 */
+    background: -moz-linear-gradient(top,  rgba(69,72,77,0.8) 0%, rgba(0,0,0,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(69,72,77,0.8) 0%,rgba(0,0,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(69,72,77,0.8) 0%,rgba(0,0,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+    
+
+    height: 100%;
+    width:100%;
+    position:fixed;
+    top: 50px;
+    left: 0;
+    z-index: 999;
+    color: #fff;
+    padding-top:20vh;
+
+
+  .overlay-inside{
+    width:30vw;
+    margin: 0 auto; 
+    display: none;
+    h1 small{
+      color: #ddd;
+    }
+  }
+
 }

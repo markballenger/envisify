@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RadialPlacementService } from './../../shared/network/radial.placement.service';
+import { RadialPlacementService } from './radial.placement.service';
 
 declare var d3;
 
@@ -8,7 +8,7 @@ export class RadialNetworkService {
 
     width = 960;
     height = 800;
-    allData = [];
+    allData: any = {};
     curLinksData = [];
     curNodesData = [];
     linkedByIndex = {};
@@ -54,13 +54,15 @@ export class RadialNetworkService {
     //
     // 
     //
-    update = function() {
+    update() {
         var artists;
         this.curNodesData = this.filterNodes(this.allData.nodes);
         this.curLinksData = this.filterLinks(this.allData.links, this.curNodesData);
+        debugger;
+        console.log(this.allData);
         if (this.layout === "radial") {
             artists = this.sortedArtists(this.curNodesData, this.curLinksData);
-            this.updateCenters(this.artists);
+            this.updateCenters(artists);
         }
         this.force.nodes(this.curNodesData);
         this.updateNodes();
@@ -140,32 +142,33 @@ export class RadialNetworkService {
     //
     setupData = function(data) {
         var circleRadius, countExtent, nodesMap;
-        countExtent = d3.extent(data.nodes, function(d) {
-            return d.playcount;
+        countExtent = d3.extent(data.nodes, (d)=> {
+            return d.radius; // todo: extract this from the service
         });
         circleRadius = d3.scale.sqrt().range([3, 12]).domain(countExtent);
-        data.nodes.forEach(function(n) {
+        data.nodes.forEach(n=> {
             var randomnumber;
             n.x = randomnumber = Math.floor(Math.random() * this.width);
             n.y = randomnumber = Math.floor(Math.random() * this.height);
-            return n.radius = circleRadius(n.playcount);
+            return n.radius = circleRadius(n.radius);
         });
         nodesMap = this.mapNodes(data.nodes);
-        data.links.forEach(function(l) {
-            l.source = nodesMap.get(l.source);
-            l.target = nodesMap.get(l.target);
-            return this.linkedByIndex["" + l.source.id + "," + l.target.id] = 1;
-        });
+        // data.links.forEach(l=> {
+        //     l.source = nodesMap.get(l.source);
+        //     l.target = nodesMap.get(l.target);
+        //     console.log(l);
+        //     debugger;
+        //     return this.linkedByIndex["" + l.source.id + "," + l.target.id] = 1;
+        // });
         return data;
     };
 
     //
     // 
     //
-    mapNodes = function(nodes) {
-        var nodesMap;
-        nodesMap = d3.map();
-        nodes.forEach(function(n) {
+    mapNodes(nodes) {
+        let nodesMap = d3.map();
+        nodes.forEach(n=> {
             return nodesMap.set(n.id, n);
         });
         return nodesMap;
@@ -174,10 +177,10 @@ export class RadialNetworkService {
     //
     // nodeCounts
     //
-    nodeCounts = function(nodes, attr) {
+    nodeCounts(nodes, attr) {
         var counts;
         counts = {};
-        nodes.forEach(function(d) {
+        nodes.forEach(d=> {
             var _name;
             if (counts[_name = d[attr]] == null) {
                 counts[_name] = 0;
@@ -190,22 +193,22 @@ export class RadialNetworkService {
     //
     // neighboring
     //
-    neighboring = function(a, b) {
+    neighboring(a, b) {
         return this.linkedByIndex[a.id + "," + b.id] || this.linkedByIndex[b.id + "," + a.id];
     };
 
     //
     // filterNodes
     //
-    filterNodes = function(allNodes) {
+    filterNodes(allNodes) {
         var cutoff, filteredNodes, playcounts;
         filteredNodes = allNodes;
         if (this.filter === "popular" || this.filter === "obscure") {
-            playcounts = allNodes.map(function(d) {
+            playcounts = allNodes.map(d=> {
                 return d.playcount;
             }).sort(d3.ascending);
             cutoff = d3.quantile(playcounts, 0.5);
-            filteredNodes = allNodes.filter(function(n) {
+            filteredNodes = allNodes.filter(n=> {
                 if (this.filter === "popular") {
                     return n.playcount > cutoff;
                 } else if (this.filter === "obscure") {
@@ -219,12 +222,12 @@ export class RadialNetworkService {
     //
     // sortedArtists
     //
-    sortedArtists = function(nodes, links) {
+    sortedArtists(nodes, links) {
         var artists, counts;
         artists = [];
         if (this.sort === "links") {
             counts = {};
-            links.forEach(function(l) {
+            links.forEach(l=> {
                 var _name, _name1;
                 if (counts[_name = l.source.artist] == null) {
                     counts[_name] = 0;
@@ -235,22 +238,22 @@ export class RadialNetworkService {
                 }
                 return counts[l.target.artist] += 1;
             });
-            nodes.forEach(function(n) {
+            nodes.forEach(n=> {
                 var _name;
                 return counts[_name = n.artist] != null ? counts[_name = n.artist] : counts[_name] = 0;
             });
-            artists = d3.entries(counts).sort(function(a, b) {
+            artists = d3.entries(counts).sort((a, b)=> {
                 return b.value - a.value;
             });
-            artists = artists.map(function(v) {
+            artists = artists.map(v=> {
                 return v.key;
             });
         } else {
             counts = this.nodeCounts(nodes, "artist");
-            artists = d3.entries(counts).sort(function(a, b) {
+            artists = d3.entries(counts).sort((a, b)=> {
                 return b.value - a.value;
             });
-            artists = artists.map(function(v) {
+            artists = artists.map(v=> {
                 return v.key;
             });
         }
@@ -260,7 +263,7 @@ export class RadialNetworkService {
     //
     // updateCenters
     //
-    updateCenters = function(artists) {
+    updateCenters(artists) {
         if (this.layout === "radial") {
             return this.groupCenters = this.placement.center({
                 "x": this.width / 2,
@@ -272,29 +275,34 @@ export class RadialNetworkService {
     //
     // filterLinks
     //
-    filterLinks = function(allLinks, curNodes) {
+    filterLinks(allLinks, curNodes) {
         curNodes = this.mapNodes(curNodes);
-        return allLinks.filter(function(l) {
-            return curNodes.get(l.source.id) && curNodes.get(l.target.id);
+        console.log(curNodes);
+        debugger;
+        return allLinks.filter(l=> {
+            console.log(l);
+            debugger;
+            return curNodes.get(l.source) && curNodes.get(l.target);
         });
     };
 
     //
     // updateNodes
     //
-    updateNodes = function() {
-        this.node = this.nodesG.selectAll("circle.node").data(this.curNodesData, function(d) {
+    updateNodes() {
+        console.log(this.curNodesData);
+        this.node = this.nodesG.selectAll("circle.node").data(this.curNodesData, (d)=> {
             return d.id;
         });
-        this.node.enter().append("circle").attr("class", "node").attr("cx", function(d) {
+        this.node.enter().append("circle").attr("class", "node").attr("cx", (d)=> {
             return d.x;
-        }).attr("cy", function(d) {
+        }).attr("cy", (d)=> {
             return d.y;
-        }).attr("r", function(d) {
+        }).attr("r", (d)=> {
             return d.radius;
-        }).style("fill", function(d) {
+        }).style("fill", (d)=> {
             return this.nodeColors(d.artist);
-        }).style("stroke", function(d) {
+        }).style("stroke", (d)=> {
             return this.strokeFor(d);
         }).style("stroke-width", 1.0);
         this.node.on("mouseover", this.showDetails).on("mouseout", this.hideDetails);
@@ -304,10 +312,12 @@ export class RadialNetworkService {
     //
     // updateLinks
     //
-    updateLinks = function() {
-        this.link = this.linksG.selectAll("line.link").data(this.curLinksData, function(d) {
+    updateLinks() {
+        this.link = this.linksG.selectAll("line.link").data(this.curLinksData, (d)=> {
             return "" + d.source.id + "_" + d.target.id;
         });
+        console.log(this.link);
+        debugger;
         this.link.enter().append("line").attr("class", "link").attr("stroke", "#ddd").attr("stroke-opacity", 0.8).attr("x1", function(d) {
             return d.source.x;
         }).attr("y1", function(d) {
@@ -323,7 +333,7 @@ export class RadialNetworkService {
     //
     // setLayout
     //
-    setLayout = function(newLayout) {
+    setLayout(newLayout) {
         this.layout = newLayout;
         if (this.layout === "force") {
             return this.force.on("tick", this.forceTick).charge(-200).linkDistance(50);
@@ -335,41 +345,36 @@ export class RadialNetworkService {
     // 
     // setFilter
     //
-    setFilter = function(newFilter) {
+    setFilter(newFilter) {
         return this.filter = newFilter;
     };
     
     //
     // setSort
     //
-    setSort = function(newSort) {
+    setSort(newSort) {
         return this.sort = newSort;
     };
 
     //
     // forceTick
     //
-    forceTick = function(e) {
-        this.node.attr("cx", function(d) {
-            return d.x;
-        }).attr("cy", function(d) {
-            return d.y;
-        });
-        return this.link.attr("x1", function(d) {
-            return d.source.x;
-        }).attr("y1", function(d) {
-            return d.source.y;
-        }).attr("x2", function(d) {
-            return d.target.x;
-        }).attr("y2", function(d) {
-            return d.target.y;
-        });
+    forceTick(e) {
+        this.node
+            .attr("cx", d=> d.x)
+            .attr("cy", d=> d.y);
+
+        return this.link
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
     };
 
     //
     // radialTick
     //
-    radialTick = function(e) {
+    radialTick(e) {
         this.node.each(this.moveToRadialLayout(e.alpha));
         this.node.attr("cx", function(d) {
             return d.x;
@@ -385,10 +390,10 @@ export class RadialNetworkService {
     //
     // moveToRadialLayout
     //
-    moveToRadialLayout = function(alpha) {
+    moveToRadialLayout(alpha) {
         var k;
         k = alpha * 0.1;
-        return function(d) {
+        return (d)=> {
             var centerNode;
             centerNode = this.groupCenters(d.artist);
             d.x += (centerNode.x - d.x) * k;
@@ -399,14 +404,14 @@ export class RadialNetworkService {
     // 
     // strokeFor
     //
-    strokeFor = function(d) {
+    strokeFor(d) {
         return d3.rgb(this.nodeColors(d.artist)).darker().toString();
     };
 
     //
     // showDetails
     //
-    showDetails = function(d, i) {
+    showDetails(d, i) {
         var content;
         content = '<p class="main">' + d.name + '</span></p>';
         content += '<hr class="tooltip-hr">';
@@ -415,13 +420,13 @@ export class RadialNetworkService {
         //this.tooltip.showTooltip(content, d3.event);
         
         if (this.link) {
-            this.link.attr("stroke", function(l) {
+            this.link.attr("stroke", (l)=> {
                 if (l.source === d || l.target === d) {
                     return "#555";
                 } else {
                     return "#ddd";
                 }
-            }).attr("stroke-opacity", function(l) {
+            }).attr("stroke-opacity", (l)=> {
                 if (l.source === d || l.target === d) {
                     return 1.0;
                 } else {
@@ -429,13 +434,13 @@ export class RadialNetworkService {
                 }
             });
         }
-        this.node.style("stroke", function(n) {
+        this.node.style("stroke", (n)=> {
             if (n.searched || this.neighboring(d, n)) {
                 return "#555";
             } else {
                 return this.strokeFor(n);
             }
-        }).style("stroke-width", function(n) {
+        }).style("stroke-width", (n)=> {
             if (n.searched || this.neighboring(d, n)) {
                 return 2.0;
             } else {
@@ -445,17 +450,17 @@ export class RadialNetworkService {
         return d3.select(this).style("stroke", "black").style("stroke-width", 2.0);
     };
 
-    hideDetails = function(d, i) {
+    hideDetails(d, i) {
         
         //this.tooltip.hideTooltip();
         
-        this.node.style("stroke", function(n) {
+        this.node.style("stroke", (n)=> {
             if (!n.searched) {
                 return this.strokeFor(n);
             } else {
                 return "#555";
             }
-        }).style("stroke-width", function(n) {
+        }).style("stroke-width", (n)=> {
             if (!n.searched) {
                 return 1.0;
             } else {

@@ -1,51 +1,79 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Ng2Webstorage } from 'ng2-webstorage';
+import { VirtualScrollModule } from 'angular2-virtual-scroll';
+//import { Logger } from 'angular2-logger/core';
+import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
+import { LazyLoadImageModule } from 'ng2-lazyload-image';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
-import { AccountComponent } from './account/account.component';
+import { ArtistsComponent } from './artists/artists.component';
 import { BubbleComponent } from './bubble/bubble.component';
-import { ApiService } from './shared';
-import { routing } from './app.routing';
-import { AuthConfigService, UtilsService }  from './shared';
-//import { Logger } from 'angular2-logger/core';
-import { ApiHttpClient } from './shared/apiHttpClient';
+import { ArtistBubbleComponent } from './artist-bubble/artist-bubble.component';
+import { ChordComponent } from './chord/chord.component';
+import { NetworkComponent } from './network/network.component';
+import { RelatedComponent } from './related/related.component';
+import { TestComponent } from './test/test.component';
+
+import { routing } from './app.routing'; 
+
+import { ApiService, 
+    ApiHttpClient, 
+    AuthConfigService, 
+    UtilsService, 
+    ApiStore,
+    ImageComponent } from './shared';
+
+import { RadialPlacementService, RadialNetworkService } from './shared/network';
+import { SliderComponent } from './shared/slider/slider.component';
 import { Typeahead } from './shared/typeahead/components/typeahead.component';
 import { FocusDirective } from './shared/focus/focus';
-//import { VirtualScrollModule } from 'angular2-virtual-scroll';
-import { ListItemComponent } from './shared/list-item/list-item';
 
-import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
+import { ListItemComponent, GenreItemComponent, ArtistItemComponent } from './shared/lists';
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpModule,
     FormsModule,
+    ReactiveFormsModule,
     routing,
-    Ng2Webstorage
-    //VirtualScrollModule
+    Ng2Webstorage,
+    LazyLoadImageModule,  
+    VirtualScrollModule
   ],
   declarations: [
     AppComponent,
     HomeComponent,
     AboutComponent,
-    AccountComponent,
+    ArtistsComponent,
     BubbleComponent,
+    ArtistBubbleComponent,
+    ChordComponent,
+    NetworkComponent,
+    SliderComponent,
+    ImageComponent,
+    RelatedComponent,
+    TestComponent,
     Typeahead,
     ListItemComponent,
+    GenreItemComponent,
+    ArtistItemComponent,
     FocusDirective
   ],
   providers: [
     ApiService,
+    ApiStore,
     //Logger,
     ApiHttpClient,
     AuthConfigService,
     UtilsService,
+    RadialPlacementService,
+    RadialNetworkService,
     { provide: 'Window',  useValue: window }  
   ],
   bootstrap: [AppComponent]

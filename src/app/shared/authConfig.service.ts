@@ -32,7 +32,7 @@ export class AuthConfigService {
   }
 
   // private helper method to determine if the user is authenticated
-  private isAuthenticated(): boolean{
+  public isAuthenticated(): boolean{
     return (this.access_token != null && this.access_token.length > 0);
   }
 

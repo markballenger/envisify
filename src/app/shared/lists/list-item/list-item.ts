@@ -8,14 +8,9 @@ export class ListItem {
 @Component({
     selector: 'list-item',
     template: `
-        <div class="avatar">{{item?.count}}</div>
-        <div class="item-content">
+        <div class="avatar" [hidden]="!item.count || item.count ===0">{{item?.count}}</div>
+        <div class="item-content" [hidden]="item.genres">
             <div class="name">{{item?.name}}</div>
-            <div>
-                <span class="badge">{{item?.name}}/{{item?.name}}</span>
-                <span>{{item?.name}} | {{item?.name}}</span>
-            </div>
-            <div>{{item?.name}}</div>
         </div>
     `,
     styleUrls: ['./list-item.scss']
