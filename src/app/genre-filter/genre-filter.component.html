@@ -1,0 +1,46 @@
+ <nav id="navbar-secondary" class="navbar-fixed-top collapse ">
+
+        <div class="form-inline  ">
+
+            <div class="input-group">
+                    <span class="input-group-addon" id="filter-by-name"><i class="fa fa-filter"></i></span>
+                    <input type="text" class="form-control" 
+                        [formControl]="nameFilter"
+                        [ngModel]="filters.text | async"
+                        (ngModelChange)="filters.text.next($event)"
+                        placeholder="filter by name" >
+            </div> 
+            
+            <button class="btn" > Sort by Name 
+                <i class="fa fa-sort-alpha-desc" *ngIf="(filters.sortDir | async) === 'asc'" (click)="filters.sortDir.next('desc')"></i> 
+                <i class="fa fa-sort-alpha-asc" *ngIf="(filters.sortDir | async) === 'desc'" (click)="filters .sortDir.next('asc')"></i> 
+            </button>
+
+            <button class="btn" > Sort by Popularity 
+                <i class="fa fa-sort-amount-desc" *ngIf="(filters.sortDir | async) === 'asc'" (click)="filters.sortDir.next('desc')"></i> 
+                <i class="fa fa-sort-amount-asc" *ngIf="(filters.sortDir | async) === 'desc'" (click)="filters.sortDir.next('asc')"></i> 
+            </button>
+        </div>
+
+
+</nav>
+
+<virtual-scroll id="genre-scroll"
+    [items]="store.genresFiltered | async"
+    (update)="scrollItems = $event"
+    (change)="indices = $event">
+    
+    <div class="genre-item noselect" 
+        (click)="selectGenre(genre)"
+        [style.background]="getBg(genre)"
+        *ngFor="let genre of scrollItems">
+        <h4>{{genre.name}} </h4>
+        <span class="badge">{{genre.count}} artists</span>
+    </div>
+
+</virtual-scroll>
+
+
+<small id="info">
+    {{(filters.genreDisplay | async)}}
+</small>

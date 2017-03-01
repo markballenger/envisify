@@ -1,0 +1,13 @@
+<virtual-scroll id="tracks-scroll"
+    [items]="(store.tracks | async)"
+    (update)="scrollItems = $event"
+    (change)="indices = $event">
+    
+    <track-item *ngFor="let track of scrollItems" [track]="track"></track-item>
+    
+</virtual-scroll>
+
+
+<div id="info">
+    {{ apiHttp.activity | async }}
+</div>

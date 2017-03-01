@@ -95,7 +95,6 @@ export class RelatedComponent implements OnInit{
     public artistSelected(artists: Artist[]){
         if(artists && artists.length > 0){
             let nodes = this.getNodes(artists[0]);
-            console.log(nodes);
             return this.network.updateData(nodes);
         }
     }

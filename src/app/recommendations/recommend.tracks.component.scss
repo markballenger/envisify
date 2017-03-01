@@ -1,0 +1,34 @@
+.recommend-item{
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;    
+    margin: 0px;
+    height: 150px;
+    text-align: left;
+    cursor: pointer;
+
+    p{
+        margin-bottom: 0;
+        padding:0;
+    }
+
+    h3{
+        padding: 0;
+        margin-bottom: 0;
+    }
+
+    .track-details{
+        position: relative;
+        left: 140px;
+    }
+}
+
+#add-all-button{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+}
+
+.popularity {
+    background: limegreen;
+}

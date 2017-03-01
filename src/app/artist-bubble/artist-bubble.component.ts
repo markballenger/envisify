@@ -25,7 +25,7 @@ export class ArtistBubbleComponent implements OnInit {
 
       this.store.allArtists
         .subscribe(artists=>{
-          this.artists = artists;
+          this.artists = _.take(artists, 100);
       });
       
       this.store.genres
@@ -99,7 +99,9 @@ export class ArtistBubbleComponent implements OnInit {
            })
           .on("click", d=>{
             this.removePopovers();
-            this.store.filterArtistsByName(d.name);
+            //todo: replace this with the new filterService 
+            // this.store.filterArtistsByName(d.name);
+            debugger;
             this.router.navigate(['network']);
           })
           .on("mouseout", d=> { this.removePopovers(); })

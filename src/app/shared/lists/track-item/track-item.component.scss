@@ -1,0 +1,40 @@
+:host{ 
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;    
+    margin: 0px;
+    height: 150px;
+    width: 50%;
+    text-align: left;
+    cursor: pointer;
+    border-bottom: 1px solid #888;
+    cursor: pointer;
+    border-bottom: 1px solid #888;
+    border-left: 1px solid #999;
+    padding-left: 10px;
+    padding-top: 10px;
+    
+
+    p{
+        margin-bottom: 0;
+        padding:0;
+    }
+
+    h3{
+        padding: 0;
+        margin-bottom: 0;
+    }
+
+
+    .track-item{
+        overflow: hidden;
+        width: 100%;
+        
+        .track-details{
+            position: relative;
+            left: 140px;
+        }
+    }
+
+    
+}

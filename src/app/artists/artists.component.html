@@ -1,26 +1,70 @@
-    <div id="navbar-secondary" class="navbar navbar-default navbar-fixed-top">
-        <div class="col-sm-4">
+ <nav id="navbar-secondary" class="navbar-fixed-top collapse ">
+
+        <div class="form-inline  ">
+
+            <div class="input-group">
+                    <span class="input-group-addon" id="filter-by-name"><i class="fa fa-filter"></i></span>
+                    <input type="text" class="form-control" 
+                        [formControl]="nameFilter"
+                        [ngModel]="filters.text | async"
+                        (ngModelChange)="filters.text.next($event)"
+                        placeholder="filter by name" >
+            </div> 
+            
+            <button class="btn" > Sort by Name 
+                <i class="fa fa-sort-alpha-desc" *ngIf="(filters.sortDir | async) === 'asc'" (click)="filters.sortDir.next('desc')"></i> 
+                <i class="fa fa-sort-alpha-asc" *ngIf="(filters.sortDir | async) === 'desc'" (click)="filters .sortDir.next('asc')"></i> 
+            </button>
+
+            <button class="btn" > Sort by Popularity 
+                <i class="fa fa-sort-amount-desc" *ngIf="(filters.sortDir | async) === 'asc'" (click)="filters.sortDir.next('desc')"></i> 
+                <i class="fa fa-sort-amount-asc" *ngIf="(filters.sortDir | async) === 'desc'" (click)="filters.sortDir.next('asc')"></i> 
+            </button>
+        </div>
+
+
+</nav>
+
+    <div *ngIf="false" id="navbar-secondary" class="navbar navbar-default navbar-fixed-top">
+        
+        <div class="col-sm-2">
+            Sort by 
+            <btn-group (selected)="filters.sortBy.next($event)" [options]="['popularity','total followers']"></btn-group>
+            <btn-group (selected)="filters.sortDir.next($event)" [options]="['asc', 'desc']"></btn-group>
+        </div>
+
+        <div class="col-sm-2">
             <typeahead id="genre-filter" #genresDropdown
                 [list]="store.genres | async"
                 [searchProperty]="'name'" 
                 [displayProperty]="'name'"
+                [displayText]="filters.genreDisplay | async"
                 [enableMultiSelect]='false'
                 [maxSuggestions]="10"
-                (selectedSuggestionsChange)="store.filterArtistsByGenre($event)"
+                (selectedSuggestionsChange)="filters.genres.next($event)"
                 placeholder="- filter genres -">
             </typeahead>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <div class="input-group">
                 <span class="input-group-addon" id="filter-by-name"><i class="fa fa-filter"></i></span>
                 <input type="text" class="form-control" 
                     [formControl]="nameFilter"
+                    [ngModel]="filters.text | async"
+                    (ngModelChange)="filters.text.next($event)"
                     placeholder="filter by name" >
             </div>        
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                   <input  [ngModel]="filters.includeFollowed | async" (ngModelChange)="filters.includeFollowed.next($event)"  type="checkbox"> Include my followed artists
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-3">
             <span id="artist-count">
-                {{(store.artistsFiltered | async).length}} {{store.genreFilter | async }} artists
+                {{(store.artistsFiltered | async).length}} {{filters.genreDisplay | async }} artists
             </span>
         </div>
     </div>
@@ -28,13 +72,22 @@
 
 
 
-<virtual-scroll 
+<virtual-scroll id="artists-scroll"
+    [style.left]="artistsLeft"
+    [style.width]="artistsWidth"
     [items]="store.artistsFiltered | async"
     (update)="scrollItems = $event"
     (change)="indices = $event">
     
-        <artist-item (click)="artistSelected(item)"  *ngFor="let item of scrollItems" [artist]="item"> </artist-item>
+        <artist-item class="noselect" 
+            [style.background]="getBg(item)"
+            [style.width]="itemWidth"
+            (click)="selectArtist(item)"  
+            *ngFor="let item of scrollItems" [artist]="item"> </artist-item>
 
 </virtual-scroll>
 
 
+<small id="info">
+    {{(apiHttp.activity | async)}}
+</small>

@@ -1,8 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Artist, Genre } from './../models';
-import { ApiService, UtilsService, ApiStore } from './../shared';
+import { ApiService, ApiHttpClient, UtilsService, ApiStore, FilterService } from './../shared';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LocalStorageService } from 'ng2-webstorage';
 import { Observable, Subject } from 'rxjs';
 import { FormControl } from '@angular/forms';
 
@@ -19,40 +18,76 @@ declare var $: any;
 export class ArtistsComponent implements OnInit {
 
     resizeStream: Observable<any> =Observable.fromEvent(window, "resize");
-    iso : any;
-
     nameFilter : FormControl = new FormControl();
+    itemWidth: string = '50%';
+    artistsWidth: string = '100%';
+    artistsLeft: string = '0';
 
     constructor(
         protected api:ApiService,
         protected store: ApiStore,
+        protected apiHttp: ApiHttpClient,
         protected route: ActivatedRoute,
         protected router: Router,
-        protected storage: LocalStorageService,
+        protected filters: FilterService,
         protected utils: UtilsService) {
     }
 
+
     ngOnInit() {
 
-        this.store.filterArtistsByName('');
+        // reinit the filter
+        this.filters.text.next('');
 
-        // setup isotope
-        this.store.artistsFiltered.subscribe();
-
+        this.resizeScroll();
+        this.resizeArtistItem();
         this.resizeStream.subscribe(x=>{
-            $('vertical-scroll').height($(window).height()- 100);
+            this.resizeScroll();
+            this.resizeArtistItem();
         });
 
-        this.nameFilter.valueChanges
-            .debounceTime(500)
-            .subscribe(x=>{
-                this.store.filterArtistsByName(x);
-            });
+        // close filters on enter
+        Observable.fromEvent($('#navbar-secondary input'), 'keydown')
+            .filter((x: any)=>x.key === 'Enter')
+            .subscribe(x=> $('#navbar-secondary').removeClass('in'));           
     }
 
-    private artistSelected(e){
-        this.store.filterArtistsByName(e.name);
-        this.router.navigate(['network']);
+    // resizes the scroll area to fit the window
+    resizeScroll(){
+        $('#artists-scroll').height($(window).height()- 100);
+    }
+
+    resizeArtistItem(){
+        if($(window).width() > 800){
+            this.itemWidth = '50%';
+        }else{
+            this.itemWidth = '100%';
+        }
+        this.itemWidth = '100%';
+        this.artistsWidth = '50%';
+        this.artistsLeft = '50%';
+    }
+
+    // updates the filter streams
+    private selectArtist(artist){
+        let artists =this.filters.artists.getValue();
+        if(_.indexOf(artists, artist) >= 0){
+            artists =_.pull(artists, artist);
+        }
+        else{
+            artists.push(artist);
+        }
+        this.filters.artists.next(artists);
+    }
+
+    // gets the background of an artist-item
+    getBg(artist){
+        let artists =this.filters.artists.getValue();
+        artists =this.filters.artists.getValue();
+        let selected = _.some(artists, x=>x.id===artist.id);
+        let result = selected ? '#eee' : 'white'
+        return result;
+
     }
 
 }

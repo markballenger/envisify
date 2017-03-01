@@ -1,0 +1,17 @@
+
+<virtual-scroll id="recommend-scroll"
+    [items]="(store.recommmendedArtists | async)?.tracks"
+    (update)="scrollItems = $event"
+    (change)="indices = $event">
+    
+    <div class="recommend-item noselect" 
+        *ngFor="let artist of scrollItems">
+        <h4>{{artist.name}} <span class="badge">{{aritst.popularity}}</span> </h4>
+    </div>
+
+</virtual-scroll>
+
+
+<div id="info">
+    {{ apiHttp.activity | async }}
+</div>

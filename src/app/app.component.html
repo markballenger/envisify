@@ -9,19 +9,22 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#"><i class="fa fa-eye fa-2x"></i>&nbsp;Envisify</a>
+
+          <button type="button" class="navbar-toggle filter-toggle collapsed" data-toggle="collapse" data-target="#navbar-secondary" 
+              aria-expanded="false" aria-controls="navbar">
+              <i class="fa fa-filter"></i>            
+          </button>
+          
+          <a [routerLink]="['']" class="navbar-brand"><i class="fa fa-eye fa-2x"></i>&nbsp;Envisify</a>
+        
         </div>
+        
+        
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-             
-                <li><a [routerLink]="['']">Home</a></li>
-                <li><a [routerLink]="['artists']">My Artists</a></li>
-                <li><a [routerLink]="['bubble']">My Genres</a></li>
+                <li><a [routerLink]="['bubble']">Genres</a></li>
                 <li><a [routerLink]="['network']">Related</a></li>
-                <li><a [routerLink]="['artist-bubble']">Artists by Popularity</a></li>
-                <!--<li><a [routerLink]="['chord']">Chord</a></li>-->
-                <!--<li><a [routerLink]="['related']">Related</a></li>-->
-                <li><a [routerLink]="['test']">Test</a></li>
+                <li><a [routerLink]="['recommendations']">Recommendations</a></li>
 
             <!--<li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -42,10 +45,16 @@
                   <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
                   <span class="sr-only">Loading...</span>
                 </div>
-              </li>
-            <li class="active">
-              <button *ngIf="isAuthenticated" class="btn login" (click)="logout()">Logout</button>
             </li>
+            <li>
+              <button type="button" class="btn filter-toggle " data-toggle="collapse" data-target="#navbar-secondary" 
+                  aria-expanded="false" aria-controls="navbar">
+                  <i class="fa fa-filter"></i>            
+              </button>
+            </li>
+            <!--<li class="active">
+              <button *ngIf="isAuthenticated" class="btn login" (click)="logout()">Logout</button>
+            </li>-->
             <li>
               <button *ngIf="!isAuthenticated" class="btn login" (click)="login()">Login</button>
             </li>
@@ -56,16 +65,8 @@
 
 </header>
 <main>
-
-
-
-
-  <!-- Images (and assets) are parsed and loaded from within the public directory -->
-
   <router-outlet></router-outlet>
 </main>
-<!--<footer>
-  Mark Ballenger   
-</footer>-->
+<!--<console></console>-->
 
 

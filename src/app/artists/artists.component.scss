@@ -1,8 +1,11 @@
 main {
     margin-top: 10px;
 }
+
 p { color :lime; }
+
 .isNew {display:none;}
+
 .thumbnail { 
     border-radius: 0;
     margin-bottom: -1px;
@@ -12,15 +15,8 @@ p { color :lime; }
     }    
 }
 
-artist-item {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: top;
-    border: 1px solid white;
-    margin: 0px;
-    height: 150px;
-    width: 200px;
-    cursor: pointer;
+  artist-item:hover {
+      background: #eee;
   }
 
   #artist-count {
@@ -28,6 +24,6 @@ artist-item {
       top: 6px;
   }
 
-  virtual-scroll{ 
-      margin-top: 50px;
+  virtual-scroll { 
+      margin-top: 10px;
   }

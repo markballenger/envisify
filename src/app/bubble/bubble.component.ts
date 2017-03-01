@@ -1,5 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { ApiService, ApiStore } from './../shared';
+import { ApiStore, FilterService, ResizeService } from './../shared';
 import { Artist, Genre } from './../models';
 import {Router} from "@angular/router";
 import { Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 declare var d3: any;
 declare var _: any;
 declare var $: any;
+declare var Color: any;
 
 @Component({
   selector: 'bubble', 
@@ -16,24 +17,30 @@ declare var $: any;
 export class BubbleComponent implements OnInit {
 
     protected genres: Genre[] = new Array<Genre>();
+    resizeStream: Observable<any> =Observable.fromEvent(window, "resize");
 
-    constructor(private router:Router, private api: ApiService, private store: ApiStore) {
-        // Do something with api
+    constructor(
+      private router:Router, 
+      private filters: FilterService,
+      protected resize: ResizeService,
+      private store: ApiStore) {
+        
     }
 
     ngOnInit(){
 
       this.store.genres
+        .debounceTime(650)
+        //.combineLatest(this.resizeStream)
         .subscribe(genres=>{
-          this.genres = genres;
+          this.resizeChart();
+          this.setupBubbles2(_.take(genres, 100));
       });
-      
-      this.store.genres
-        .debounce(()=> Observable.timer(650))
-        .subscribe(genres=>{
-          this.setupBubbles2();
-      });
+    }
 
+    private resizeChart(){
+      $('#chart').height($(window).height()- 100);
+      $('#chart').width($(window).width()- 0);
     }
 
     private maxRadius: any;
@@ -44,40 +51,41 @@ export class BubbleComponent implements OnInit {
     private force: any;
     private svg: any;
 
-    setupBubbles2(){
-        var width = 500, height = 500;
-
-        var fill = d3.scale.ordinal()
-          .domain(["low", "medium", "high"])
-          .range(["#31a354", "#74c476", "#c7e9c0"]) // todo: color service
-
-        this.svg = d3.select("#chart").append("svg")
-            .attr("width", width)
-            .attr("height", height);
-
-        var max_amount = d3.max(this.genres, function (d) { return parseInt(d.count)})
-        var radius_scale = d3.scale.pow().exponent(.8).domain([0, max_amount]).range([2, 85])
-
-        _.each(this.genres, elem=> {
-          elem.radius = radius_scale(elem.count)*.5;
-          elem.all = 'all';
-          elem.x = _.random(0, width);
-          elem.y = _.random(0, height);
-        })
-
-        this.padding = 4;
-        this.maxRadius = d3.max(_.map(this.genres, g=> g.radius));
-
-        this.year_centers = {
-          "2008": {name:"2008", x: 150, y: 100},
-          "2009": {name:"2009", x: 250, y: 100},
-          "2010": {name:"2010", x: 400, y: 100}
+    setupBubbles2(genres){
+        // if a resetup
+        if(this.svg){
+            d3.select('svg').remove();
         }
 
-        this.all_center = { "all": {name:"All Genres", x: 250, y: 250}};
+        var width = $('#chart').width(), height = $('#chart').height();
+
+        this.svg = d3.select("#chart").append("svg")
+            .attr('width', width)
+            .attr('height', height);
+
+        var max_amount = d3.max(genres, function (d) { return parseInt(d.count)})
+        var radius_scale = d3.scale.pow().exponent(1).domain([0, max_amount]).range([20, 150])
+
+        _.each(genres, elem=> {
+          elem.radius = radius_scale(elem.count)*.4;
+          elem.all = 'all';
+          elem.x = _.random(0, width *.5 + width * .5);
+          elem.y = _.random(0, height * .5 + height * .5);
+        })
+
+        this.padding = 10;
+        this.maxRadius = d3.max(_.map(genres, g=> g.radius));
+
+        this.year_centers = {
+          "2008": {name:"2008", x: width/4, y: height/2},
+          "2009": {name:"2009", x: width/4 * 2, y: height/2},
+          "2010": {name:"2010", x: width/4 * 3, y: height/2}
+        }
+
+        this.all_center = { "all": {name:"All Genres", x: width/2, y: height/2}};
 
         this.nodes = this.svg.selectAll("circle")
-          .data(this.genres);
+          .data(genres);
 
         this.nodes.enter().append("circle")
           .attr("class", "node")
@@ -85,7 +93,7 @@ export class BubbleComponent implements OnInit {
           .attr("cy", function (d) { return d.y; })
           .attr("r", 6)
           .style("cursor", "pointer")
-          .style("fill", d => fill(this.getFill(d)))
+          .style("fill", d => this.getFill(d))
           .on("mouseover", function (d) { 
               $(this).popover({
                 placement: 'auto top',
@@ -99,19 +107,21 @@ export class BubbleComponent implements OnInit {
            })
           .on("click", d=>{
             this.removePopovers();
-            let genres = new Array<Genre>();
-            genres.push(d);
-            this.store.filterArtistsByGenre(genres);
+            let genres = [d];
+            this.filters.genres.next(genres);
             this.router.navigate(['artists']);
           })
           .on("mouseout", d=> { this.removePopovers(); })
 
-        this.nodes.transition().delay(200).duration(1000)
+        this.nodes.transition()
+          .delay(500)
+          .duration(1000)
+          .ease('cubic-in-out')
           .attr("r", function (d) { return d.radius; })
 
         this.force = d3.layout.force();
 
-        this.draw('all');
+        this.draw('all', genres);
 
         $( ".btn" ).click(function() {
           this.draw(this.id);
@@ -120,35 +130,33 @@ export class BubbleComponent implements OnInit {
 
 
   getFill(d){
-    var result = "high";
-    if(d.radius > (this.maxRadius - (this.maxRadius / 3))){
-      result = "high"; 
-    } else if(d.radius > (this.maxRadius - (2* (this.maxRadius / 3)))){
-      result = "medium";
-    }else{
-      result = "low";
-    }
-    return result;
+    let red = d.radius;
+    red = d.radius * 255/150;
+    red = Math.round(red);
+    let color = Color('rgb(' + red + ',2,4)');
+    color = color.lighten(2);
+    return color.hex();
   }
 
-
-  draw (varname) {
+  draw (varname, genres) {
           var foci = varname === "all" ? this.all_center: this.year_centers;
-          this.force.on("tick", this.tick(foci, varname));
+          this.force.on("tick", this.tick(foci, varname, genres));
           this.labels(foci);
           this.force.start();
-        }
+  }
 
-  tick (foci, varname) {
+  tick (foci, varname, genres) {
           return e=> {
-            for (var i = 0; i < this.genres.length; i++) {
-              var o = <any>this.genres[i];
-              var f = foci[o[varname]];
-              o.y += (f.y - o.y) * e.alpha;
-              o.x += (f.x - o.x) * e.alpha;
+            for (var i = 0; i < genres.length; i++) {
+              var genre = <any>genres[i];
+              var f = foci[genre[varname]];
+              if(f){
+                genre.y += (f.y - genre.y) * e.alpha;
+                genre.x += (f.x - genre.x) * e.alpha;
+              }
             }
             this.nodes
-              .each(this.collide(.18))
+              .each(this.collide(.18, genres))
               .attr("cx", function (d) { return d.x; })
               .attr("cy", function (d) { return d.y; });
           }
@@ -173,8 +181,8 @@ export class BubbleComponent implements OnInit {
         }
 
 
-   collide(alpha) {
-          var quadtree = d3.geom.quadtree(this.genres);
+   collide(alpha, genres) {
+          var quadtree = d3.geom.quadtree(genres);
           return d=> {
             var r = d.radius + this.maxRadius + this.padding,
                 nx1 = d.x - r,

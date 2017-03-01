@@ -360,6 +360,7 @@ export class RadialNetworkService {
     // forceTick
     //
     forceTick(e) {
+        
         this.node
             .attr("cx", d=> d.x)
             .attr("cy", d=> d.y);

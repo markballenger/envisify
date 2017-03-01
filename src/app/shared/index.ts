@@ -5,3 +5,8 @@ export * from './api.store';
 export * from './apiHttpClient';
 export * from './lists';
 export * from './image';
+export * from './filter.service';
+export * from './resize.service';
+export * from './console.service';
+export * from './gesture.service';
+export * from './recommend.options.service';

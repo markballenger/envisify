@@ -1,0 +1,39 @@
+:host{
+    position: absolute;
+    
+    .loading {
+
+        .fa-spotify {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left:-10px;
+            margin-top: -20px;
+        }
+        .fa-spin{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -19px;
+            margin-top: -27px;
+        }
+        
+    }
+
+    .thumbnail { 
+        z-index: 99;
+        padding: 0;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        overflow: hidden;
+        
+        img{
+            /*position:relative;*/
+        }
+        h4{
+            font-size: 3vh;
+        }    
+    }
+
+}

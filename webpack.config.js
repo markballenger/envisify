@@ -203,7 +203,9 @@ module.exports = function makeWebpackConfig() {
     new webpack.ProvidePlugin({
         //d3: 'd3',
         $: "jquery",
-        jQuery: "jquery"
+        jQuery: "jquery",
+        Color: 'Color',
+        query: 'query-string'
     }),
 
     // Tslint configuration for webpack 2

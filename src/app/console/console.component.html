@@ -1,0 +1,4 @@
+<div *ngIf="visible" id="console-container">
+    <h1>console</h1>
+    <div *ngFor="let log of (console.logs | async)">{{log.text}}</div>
+</div>

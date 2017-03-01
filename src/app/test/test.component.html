@@ -3,6 +3,16 @@
         <div class="jumbotron">
             <h1>Testing</h1>
             <p>This page is just a placeholder for testing things for now...</p>
+            
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">@</span>
+                
+                <input [ngModel]="filter.text | async" 
+                    (ngModelChange)="filter.text.next($event)" type="text"
+                    class="form-control" placeholder="Filter" 
+                    aria-describedby="basic-addon1">
+            
+            </div>
         </div>
     </div>
 </div>

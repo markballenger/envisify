@@ -1,6 +1,6 @@
-import { Component, Input, ViewEncapsalation } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
-import { ListItem } from './lists/list-item';
+import { ListItem } from './../list-item/list-item';
 
 @Component({
     selector: 'multicol-list',
@@ -21,8 +21,7 @@ import { ListItem } from './lists/list-item';
 
         </virtual-scroll>
     `,
-    styleUrls: ['./multicol-list.component.scss'],
-    encapsalation: ViewEncapsalation.None
+    styleUrls: ['./multicol-list.component.scss']
 })
 export class VerticalListComponent {
 

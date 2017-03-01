@@ -4,7 +4,6 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Ng2Webstorage } from 'ng2-webstorage';
 import { VirtualScrollModule } from 'angular2-virtual-scroll';
-//import { Logger } from 'angular2-logger/core';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 import { LazyLoadImageModule } from 'ng2-lazyload-image';
 
@@ -18,22 +17,39 @@ import { ChordComponent } from './chord/chord.component';
 import { NetworkComponent } from './network/network.component';
 import { RelatedComponent } from './related/related.component';
 import { TestComponent } from './test/test.component';
+import { FiltersComponent } from './filters/filters.component';
+import { RecommendationsComponent } from './recommendations/recommendations.component';
+import { RecommendTracksComponent } from './recommendations/recommend.tracks.component';
+import { RecommendArtistsComponent } from './recommendations/recommend.artists.component';
+import { RecommendOptionsComponent } from './recommendations/recommend.options.component';
+import { TracksComponent } from './tracks/tracks.component';
+
+import { ConsoleComponent } from './console/console.component';
 
 import { routing } from './app.routing'; 
 
-import { ApiService, 
+import { ConsoleService, 
+    ApiService, 
     ApiHttpClient, 
     AuthConfigService, 
     UtilsService, 
     ApiStore,
-    ImageComponent } from './shared';
+    FilterService,
+    ImageComponent,
+    ResizeService,
+    RecommendOptionsService,
+    GestureService } from './shared';
 
 import { RadialPlacementService, RadialNetworkService } from './shared/network';
 import { SliderComponent } from './shared/slider/slider.component';
 import { Typeahead } from './shared/typeahead/components/typeahead.component';
 import { FocusDirective } from './shared/focus/focus';
+import { GenreFilterComponent } from './genre-filter/genre-filter.component';
+import { SwipeablesComponent } from './shared/swipeable';
+import { MinMaxComponent } from './shared/minmax/minmax.component';
 
-import { ListItemComponent, GenreItemComponent, ArtistItemComponent } from './shared/lists';
+import { ListItemComponent, GenreItemComponent, ArtistItemComponent, TrackItemComponent } from './shared/lists';
+import { BtnGroupComponent } from './shared/btn-group/btn.group.component';
 
 @NgModule({
   imports: [
@@ -55,31 +71,49 @@ import { ListItemComponent, GenreItemComponent, ArtistItemComponent } from './sh
     ArtistBubbleComponent,
     ChordComponent,
     NetworkComponent,
-    SliderComponent,
-    ImageComponent,
-    RelatedComponent,
+    FiltersComponent,
     TestComponent,
-    Typeahead,
-    ListItemComponent,
+    RelatedComponent,
+    GenreFilterComponent,
+    RecommendationsComponent,
+    RecommendTracksComponent,
+    RecommendArtistsComponent,
+    RecommendOptionsComponent,
+    TracksComponent,
+    ConsoleComponent,
+
     GenreItemComponent,
     ArtistItemComponent,
-    FocusDirective
+    TrackItemComponent,
+    ListItemComponent,
+
+    SliderComponent,
+    ImageComponent,
+    Typeahead,
+    BtnGroupComponent,
+    FocusDirective,
+    SwipeablesComponent,
+    MinMaxComponent
   ],
   providers: [
-    ApiService,
-    ApiStore,
-    //Logger,
-    ApiHttpClient,
-    AuthConfigService,
     UtilsService,
+    AuthConfigService,
+    ConsoleService,
+    ApiService,
+    FilterService,
+    ApiStore,
+    ApiHttpClient,
+    ResizeService,
+    GestureService,
     RadialPlacementService,
     RadialNetworkService,
+    RecommendOptionsService,
     { provide: 'Window',  useValue: window }  
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(public appRef: ApplicationRef) {}
+  constructor(public appRef: ApplicationRef) {  }
   hmrOnInit(store) {
     console.log('HMR store', store);
   }

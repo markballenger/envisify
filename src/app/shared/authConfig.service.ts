@@ -3,7 +3,6 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { LocalStorage, SessionStorage, LocalStorageService } from 'ng2-webstorage';
 import { UtilsService } from './utils.service';
-//import { Logger } from 'angular2-logger/core';
 
 @Injectable()
 export class AuthConfigService {
@@ -39,14 +38,10 @@ export class AuthConfigService {
   constructor(public http:Http, 
     protected storage: LocalStorageService,
     protected utils: UtilsService, 
-    @Inject('Window') protected window: Window 
-    /*private logger: Logger*/){
-      //logger.level = logger.Level.LOG;
-      
+    @Inject('Window') protected window: Window){
       this.refreshStream
         .filter(()=> this.isAuthenticated())
         .subscribe(()=> this.requestRefreshToken());
-
   } 
 
   //
@@ -55,8 +50,6 @@ export class AuthConfigService {
   private requestRefreshToken(){
     this.http.get(`${this.baseUri}refresh_token?refresh_token=${this.refresh_token}`)
       .map((res: Response)=> res.json().access_token)
-      //.publishReplay()
-      //.refCount()
       .subscribe(token=>{
         this.setTokens(token, this.refresh_token);
         this.window.localStorage.setItem('access_token', this.access_token);

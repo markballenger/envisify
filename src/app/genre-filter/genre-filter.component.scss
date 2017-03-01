@@ -1,0 +1,23 @@
+.genre-item{ 
+    display: inline-block;
+    overflow: hidden;
+    cursor: pointer;
+    width: 150px;
+    height: 100px;
+    background: #ccc;
+    color:#fff;
+    margin: 2px 4px;
+    position: relative;
+    text-align: center;
+    
+    h4{
+        position: relative;
+        top: 50%;
+        margin-top: -20px;
+    }
+    .badge {
+        background:#fff;
+        color: #333;
+    }
+}
+

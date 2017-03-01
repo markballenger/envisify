@@ -1,0 +1,26 @@
+<div class="row">
+
+    <div class="col-xs-2">
+        <label>{{label}}</label>
+    </div>
+
+    <div class="col-xs-2">
+            <input type="text" [ngModel]="minStream | async" (ngModelChange)="minStream.next($event)"  
+                class="form-control" placeholder="min" aria-describedby="basic-addon1">
+    </div>
+
+    <div class="col-xs-6">
+        <div #slider class="slider-container">
+            <div class="slider-ribbon">
+                <div #knobMin [style.left]="leftMin" class="min-knob slider-knob"></div>
+                <div #knobMax [style.left]="leftMax" class="max-knob slider-knob"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-2">
+        <input type="text" [ngModel]="maxStream | async" (ngModelChange)="maxStream.next($event)"   
+            class="form-control" placeholder="max" aria-describedby="basic-addon1">
+    </div>
+
+</div>

@@ -1,7 +1,8 @@
 import {Image} from './image';
+import {IGenres} from './../models/interfaces';
 import { Observable } from 'rxjs';
 
-export class Artist {
+export class Artist implements IGenres {
   constructor(
       public name: string,
       public isNew: boolean,
@@ -13,7 +14,7 @@ export class Artist {
       public popularity: number, 
       public uri: string,
       public relatedArtists: Observable<Artist[]>,
-      public existsInLibrary: boolean,
+      public following: boolean,
       public relatedTo: string){   
     
     }

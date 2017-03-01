@@ -1,0 +1,40 @@
+<ul *ngIf="!(hasTracks | async)" class="list-group">
+    <li class="list-group-item">
+        <i class="fa fa-arrow-right"></i>Swipe right to select artists
+    </li>
+    <li class="list-group-item">
+        <i class="fa fa-arrow-left"></i>Swipe left to select genres
+    </li>
+    <li class="list-group-item">
+        <i class="fa fa-arrow-down"></i> Swipe down to for recommended artists instead of tracks
+    </li>
+</ul>
+
+<virtual-scroll id="recommend-scroll"
+    [items]="(store.recommendations | async)?.tracks"
+    (update)="scrollItems = $event"
+    (change)="indices = $event">
+    
+    <div [style.width]="itemWidth" class="recommend-item noselect" 
+        *ngFor="let track of scrollItems">
+        
+        <image [images]="track.album.images" [min]="130"></image> 
+        <!--<i class="fa fa-check fa-3x" *ngIf="trackExists(track, (store.tracks | async))"></i>-->
+        <div class="track-details">
+            <h1 class="visible-lg visible-md">{{track.name}}&nbsp;<span class="badge popularity">{{track.popularity}}</span></h1>
+            <h3 class="visible-sm visible-xs">{{track.name}}&nbsp;<span class="badge popularity">{{track.popularity}}</span></h3>
+            <p><small>{{track.album.name}}</small></p>
+            <span *ngFor="let artist of track.artists" class="badge" 
+                [style.background]="artist.following ? '#888' : '#333'">
+                <small><i class="fa fa-check" *ngIf="artist.following"></i>&nbsp;{{artist.name}}</small>
+            </span>
+        </div>
+    </div>
+
+</virtual-scroll>
+
+<button id="add-all-button" (click)="addAll()" class="btn btn-default"><i class="fa fa-plus"></i> Add All</button>
+
+<div id="info">
+    {{ apiHttp.activity | async }}
+</div>

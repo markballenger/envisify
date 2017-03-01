@@ -7,26 +7,20 @@ import '@angular/http';
 import '@angular/router';
 
 // rxjs
-import 'rxjs';
+//import 'rxjs';
 // todo: when closer to production ready, specify only our needed operators explicitly
 // todo: move these imports to a rx-operators.ts file
-// import 'rxjs/add/operator/publishReplay';
-// import 'rxjs/add/operator/fromEvent';
-// import 'rxjs/add/operator/pluck';
-// import 'rxjs/add/operator/publish';
-// import 'rxjs/add/operator/reduce';
-// import 'rxjs/add/operator/merge';
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/operator/filter';
-// import 'rxjs/add/operator/delay';
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/operator/debounce';
-// import 'rxjs/add/operator/concat';
-// import 'rxjs/add/operator/zip';
-// import 'rxjs/add/operator/from';
-// import 'rxjs/add/operator/interval';
-// import 'rxjs/add/operator/map';
-
+import 'rxjs/add/operator/publishReplay';
+import 'rxjs/add/operator/publish';
+import 'rxjs/add/operator/reduce';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/concat';
+import 'rxjs/add/operator/zip';
+import 'rxjs/add/operator/pairwise';
 
 import '@angularclass/hmr';
 
@@ -40,10 +34,10 @@ import 'bootstrap/dist/js/bootstrap.js';
 //import 'holderjs/holder.js';
 //import 'isotope-layout/dist/isotope.pkgd.js'; using cdn for now instead
 import 'lodash';
-import 'angular2-virtual-scroll/dist/virtual-scroll.js';
-import 'ng2-webstorage';
 import 'd3/d3.js'; //using cdn for now instead
 import 'font-awesome/css/font-awesome.css';
-import 'fittext/dist/jquery.fittext.js';
-//import 'ng2-lazyload-image';
-//import 'ng2-image-lazy-load';
+import 'color-string';
+import 'color-convert';
+import 'color';
+import 'query-string';
+//import 'fittext/dist/jquery.fittext.js';

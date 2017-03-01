@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiStore } from './../shared';
+import { ApiStore, FilterService } from './../shared';
 import { Observable } from 'rxjs';
 import { Artist } from './../models';
 
@@ -13,18 +13,22 @@ declare var _ : any;
 export class TestComponent implements OnInit{
 
     artists : Artist[];
-
-    constructor(protected store: ApiStore){
+    
+    constructor(protected store: ApiStore, protected filter: FilterService){
 
     }
 
     ngOnInit(){
 
-        this.test();
-
+        //this.testRelatedStream();
+        this.testFilter();
     }
 
-    test(){
+    testFilter(){
+        this.filter.text.subscribe(x=>console.log(x));
+    }
+
+    testRelatedStream(){
         let relatedStream = this.store.artistsFiltered
             .flatMap(x=>x)
             .flatMap(x=>x.relatedArtists.take(3))

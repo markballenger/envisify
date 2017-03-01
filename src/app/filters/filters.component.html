@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-sm-12">
+        Sort by 
+        <btn-group (selected)="filters.sortBy.next($event)" [options]="['popularity','total followers']"></btn-group>
+        <btn-group (selected)="filters.sortDir.next($event)" [options]="['asc', 'desc']"></btn-group>
+    </div>
+
+    <div class="col-sm-12">
+        <typeahead id="genre-filter" #genresDropdown
+            [list]="store.genres | async"
+            [searchProperty]="'name'" 
+            [displayProperty]="'name'"
+            [displayText]="filters.genreDisplay | async"
+            [enableMultiSelect]='false'
+            [maxSuggestions]="10"
+            (selectedSuggestionsChange)="filters.genres.next($event)"
+            placeholder="- filter genres -">
+        </typeahead>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="input-group">
+            <span class="input-group-addon" id="filter-by-name"><i class="fa fa-filter"></i></span>
+            <input type="text" class="form-control" 
+                [formControl]="nameFilter"
+                [ngModel]="filters.text | async"
+                (ngModelChange)="filters.text.next($event)"
+                placeholder="filter by name" >
+        </div>        
+    </div>
+    <div class="col-sm-12">
+        <div class="checkbox">
+            <label>
+                <input  [ngModel]="filters.includeFollowed | async" (ngModelChange)="filters.includeFollowed.next($event)"  type="checkbox"> Include my followed artists
+            </label>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <span id="artist-count">
+            {{(store.artistsFiltered | async).length}} {{filters.genreDisplay | async }} artists
+        </span>
+    </div>
+</div>

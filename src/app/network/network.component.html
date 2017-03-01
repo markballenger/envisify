@@ -1,7 +1,9 @@
 <div style="position: absolute; bottom:90px; right: 30px; color: #ccc; text-align:right;">
 <h1 >{{data.nodes[0]?.name}}</h1>
 <p>Popularity: {{data.nodes[0]?.popularity}}</p>
-<p>{{data.nodes[0]?.genres.join(', ')}}</p>
+<p>Followers: {{data.nodes[0]?.followers?.total}}<p>
+<p>Radius: {{data.nodes[0]?.radius}}</p>
+<span *ngFor="let genre of data.nodes[0]?.genres" class="badge">{{genre}}</span>
 </div>
 
 <div class="row">        
@@ -22,20 +24,28 @@
             <div class="well" >
                 <h3>Related Artists</h3>
                 <p>Explore related artists. Size is in relation to artist popularity.</p>
-                <i class="fa fa-circle" style="color: limegreen;"></i> In your library
-                <i class="fa fa-circle" style="color: red;"></i> Not in your library
+                <div [hidden]="!includeFollowed"><i class="fa fa-circle" style="color: limegreen;"></i> In your library</div>
             </div>
             <typeahead id="artist-filter"  
                 [list]="store.allArtists | async"
                 [searchProperty]="'name'" 
                 [displayProperty]="'name'"
-                [displayText]="store.artistFilter | async"
+                [displayText]="data.nodes[0]?.name"
                 [enableMultiSelect]='false'
                 [maxSuggestions]="10"
                 (selectedSuggestionsChange)="$event.length > 0 && store.filterArtistsByName($event[0].name)"
                 placeholder="- select an artist -">
             </typeahead>
-            <virtual-scroll 
+            <div class="well">
+                Prioritize <btn-group (selected)="prioritySelected($event)" [options]="['popularity','total followers']"></btn-group>
+                Sort Priority <btn-group (selected)="sortSelected($event)" [options]="['asc', 'desc']"></btn-group>
+                <div class="checkbox">
+                    <label>
+                    <input  [(ngModel)]="includedFollowed" (ngModelChange)="includeFollowedChanged($event)"  type="checkbox"> Include my followed artists
+                    </label>
+                </div>
+            </div>
+            <!--<virtual-scroll 
                 [items]="related | async"
                 (update)="scrollItems = $event"
                 (change)="indices = $event">
@@ -43,6 +53,12 @@
                     {{item.name}}
                 </div>
             </virtual-scroll>
+            -->
+            <div class="list-group-item text-left" *ngFor="let item of (related | async)">
+                {{item.name}} <i *ngIf="item.following" style="color:limegreen;" class="fa fa-circle"></i>
+                <div><span class="badge">popularity: {{item.popularity}}</span><span class="badge">followers: {{item.followers?.total}}</span></div>
+            </div>
+            
 
         </div>
 
@@ -63,7 +79,7 @@
 
 
 
-    <div [hidden]="true" style="position:absolute; right:0; top: 100px;">
+    <div style="position:absolute; right:0; top: 100px;">
         <slider [min]="0" [max]="1" [(value)]="gravity" [valueStream]="d3Stream"></slider>
         <slider [min]="0" [max]="1000" [(value)]="distance" [valueStream]="d3Stream"></slider>
         <slider [min]="-1000" [max]="1000" [(value)]="charge" [valueStream]="d3Stream"></slider>

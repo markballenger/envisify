@@ -1,10 +1,12 @@
+$spotifyGreen: #2fd565;
+
 // styles in src/style directory are applied to the whole page
 html{
-  background: -moz-linear-gradient(top,  rgba(69,72,77,0.8) 0%, rgba(0,0,0,1) 100%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(top,  rgba(69,72,77,0.8) 0%,rgba(0,0,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to bottom,  rgba(69,72,77,0.8) 0%,rgba(0,0,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
-  background-image: url('/img/bg3.jpg');
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+0,0+100;White+to+Transparent */
+background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
   height:100%;
 }
 body {
@@ -19,17 +21,15 @@ artist-item{
 
 #navbar-secondary{
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#adadad+0,adadad+100&1+0,0.55+100 */
-  background: -moz-linear-gradient(top,  rgba(173,173,173,1) 100%, rgba(173,173,173,0.55) 0%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(top,  rgba(173,173,173,1) 100%,rgba(173,173,173,0.55) 0%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to bottom,  rgba(173,173,173,1) 100%,rgba(173,173,173,0.55) 0%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#adadad', endColorstr='#8cadadad',GradientType=0 ); /* IE6-9 */
+  background: #ccc;
   margin-top: 50px;
   border: none;
-  padding-top:10px;
+  z-index: 998;
+  padding:10px;
 }
 
 circle {
-  stroke: white;
+  stroke: #777;
   stroke-width: 2px;
   z-index:9;
 }
@@ -113,3 +113,21 @@ virtual-scroll {
  {
     height: 300px !important;
  }
+
+*, .noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+img {
+  -webkit-user-drag: none;
+}
+
+#info{
+    position: absolute;
+    bottom: 0; 
+    right: 0;
+}

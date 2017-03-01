@@ -27,11 +27,14 @@ export class NetworkComponent implements OnInit {
     public charge: number = -1000;
     public imageRadius: number = 50;
 
-    public relatedPerArtistCount = 10;
+    public relatedPerArtistCount = 20;
+    public priority = "popularity";
+    public includeFollowed: boolean = false;
+    public sort: string = "desc";
 
     public d3Stream: Subject<number> = new Subject();
     public related: Subject<Artist[]> = new Subject();
-    public networkStream: Subject<Artist> = new Subject();
+    public networkStream: Subject<Artist[]> = new Subject();
 
     constructor(protected store : ApiStore){
 
@@ -51,24 +54,30 @@ export class NetworkComponent implements OnInit {
                 this.setupSvg();
             });
 
-        
+        // update the force layout 
         this.networkStream
-            .subscribe((artist: Artist)=>{
+            .combineLatest(this.store.allArtists, (x, y)=> { 
+                return {
+                    'artists': x,
+                    'allArtists': y
+                };
+            })
+            .subscribe((x: any)=>{
 
                 // do one artist at a time for now  
                 this.data.nodes = [];
                 this.data.links = [];
 
                 // map the first layer of artists
-                if(!_.some(this.data.nodes, {id: artist.id}))
-                    this.data.nodes.push(this.createNode(artist));
+                if(!_.some(this.data.nodes, {id: x.artists[0].id}))
+                    this.data.nodes.push(this.createNode(x.artists[0], x.allArtists));
 
                 // we have a node, init
                 this.setupD3();
                 this.setupSvg();
 
                 // get the first round of related
-                this.subscribeRelated(artist);
+                this.subscribeRelated(x.artists[0]);
             });
 
         this.store.artistsFiltered
@@ -77,7 +86,7 @@ export class NetworkComponent implements OnInit {
                 
                 // for now, only support 1 artist at a time
                 if(artists && artists.length)
-                    this.networkStream.next(artists[0]);
+                    this.networkStream.next(artists);
             });
 
 
@@ -89,6 +98,7 @@ export class NetworkComponent implements OnInit {
         return similar.length > 0;
     }
 
+    
     //
     // processRelated: adds nodes and links for the top 25 related artists
     //   based on the given source artist
@@ -107,32 +117,43 @@ export class NetworkComponent implements OnInit {
             })
             .map(x=> { 
                 _.each(x.relatedArtists, r=> {
-                    r.existsInLibrary = _.some(x.allArtists, {id: r.id});
+                    r.following = _.some(x.allArtists, {id: r.id});
                 });
-                //return _.filter(x.relatedArtists, {existsInLibrary: false});
-                return x.relatedArtists;
+                return x;
             })
             
             // have to setup svg styles for the new nodes
             .finally(()=> this.setupSvg()) 
 
-            .subscribe(relatedArtists=>{
-                this.loadRelated(relatedArtists, sourceArtist);
-        });
+            .subscribe((x: any)=>{
+                this.loadRelated(x.relatedArtists, sourceArtist, x.allArtists);
+            });
     }   
 
     //
     // loadRelated
     //
-    private loadRelated(relatedArtists : Artist[], sourceArtist: Artist){
-        // only take so many related artsits at a time
-        relatedArtists = _.take(relatedArtists, this.relatedPerArtistCount);
+    private loadRelated(relatedArtists : Artist[], sourceArtist: Artist, allArtists: Artist[]){
+        // sort based on priority selected
+        let sorted = _.sortBy(relatedArtists, this.priority ==='popularity' ? ['popularity'] : ['followers.total']);
+
+        if(this.sort==='desc')
+            sorted = sorted.reverse();  
+        
+        let filtered = _.filter(sorted, {following: false});
+
+        // don't filter if including followed artists
+        if(this.includeFollowed)
+            filtered = sorted;
+
+        relatedArtists = _.take(filtered, this.relatedPerArtistCount);
         this.related.next(relatedArtists);
+      
         var artistIndex = _.indexOf(this.data.nodes, _.find(this.data.nodes, {id: sourceArtist.id}));
         _.each(relatedArtists, relatedArtist=>{
-                let n = _.find(this.data.nodes, {id: relatedArtist.id});
-                if(!n)
-                    this.data.nodes.push(this.createNode(relatedArtist));
+                let existing = _.find(this.data.nodes, {id: relatedArtist.id});
+                if(!existing)
+                    this.data.nodes.push(this.createNode(relatedArtist, allArtists));
                 var linkToIndex = _.indexOf(this.data.nodes, _.find(this.data.nodes, {id: relatedArtist.id}));
                 var link = {source: artistIndex, target: linkToIndex, weight: 50};
 
@@ -144,17 +165,52 @@ export class NetworkComponent implements OnInit {
     //
     // createNode: creates a node based on an artist
     //
-    private createNode(artist: any){
+    private createNode(artist: any, allArtists: any){
         return {
             id: artist.id,
             name: artist.name,
             img: artist.img || this.getImage(artist),
             group: 1,
+            followers: artist.followers,
             genres: artist.genres,
+            radius: this.getRadius(artist, allArtists),
             popularity: artist.popularity,
             relatedArtists: artist.relatedArtists,
-            existsInLibrary: artist.existsInLibrary
+            following: artist.following
         };
+    }
+
+    private getRadius(artist: any, allArtists: Artist[]){
+        if(this.priority === 'popularity')
+            return artist.popularity 
+        else{
+
+            let maxRadius = 75; // the capped radius to base everything on
+            let largestFollowers = _.max(_.map(allArtists, m=> m.followers ? m.followers.total : 0));
+            let followerCount = (artist.followers ? artist.followers.total : 0);
+            let radiusFactor =  (maxRadius/largestFollowers);
+            let result =  (followerCount * radiusFactor * .3) + (.3 * maxRadius); // translate .3
+            return result;
+        }
+    }
+
+    private repeatArtistsStream(){
+        this.networkStream.next([this.data.nodes[0]]);
+    }
+
+    private includeFollowedChanged(e){
+        this.includeFollowed = e;
+        this.repeatArtistsStream();
+    }
+
+    private sortSelected(sort){
+        this.sort = sort;
+        this.repeatArtistsStream();
+    }
+
+    private prioritySelected(priority){
+        this.priority = priority;
+        this.repeatArtistsStream();
     }
 
     //
@@ -209,7 +265,7 @@ export class NetworkComponent implements OnInit {
     // 
     // setupSvg: to be called everytime new nodes are added to style them
     // 
-    setupSvg(){
+    private setupSvg(){
 
         this.svg.selectAll('*').remove();
 
@@ -241,10 +297,10 @@ export class NetworkComponent implements OnInit {
                 //.attr("class", "logo")
                 .attr('cx', 0)
                 .attr('cy', 0)
-                .attr('r', d=>d.popularity)
+                .attr('r', d=>d.radius)
                 .style('stroke-width', '4px')
                 .style('fill', 'transparent')       // this code works OK
-                .style('stroke', d=> d.existsInLibrary===true ? 'limegreen' : 'red')
+                .style('stroke', d=> d.following===true ? '#2fd565' : 'white')
                 .style('fill', d=> 'url(#' + d.id + '-icon)');
         
         // make the image grow a little on mouse
@@ -256,7 +312,9 @@ export class NetworkComponent implements OnInit {
                 {
                     this.removePopovers();
                     //this.subscribeRelated(d);
-                    this.networkStream.next(d);
+                    let artists = new Array<Artist>();
+                    artists.push(d); 
+                    this.networkStream.next(artists);
                 })
 
                 .on( 'mouseenter', function(d) {
@@ -276,7 +334,11 @@ export class NetworkComponent implements OnInit {
                         trigger: 'manual',
                         html : true,
                         content: function() {
-                        return d.name; }
+                            return '<h3>' + d.name + '</h3>' + 
+                                ' Popularity: ' + d.popularity + 
+                                ' Followers: ' + d.followers.total + 
+                                ' Radius: ' + d.radius; 
+                        }
                     });
                     $(this).popover('show');
                 })
@@ -286,7 +348,7 @@ export class NetworkComponent implements OnInit {
                     .transition()
                     .attr('x', d=> imageRadius * -3)
                     .attr('y', d=> imageRadius * -3)
-                    .attr('r', r=> r.popularity)
+                    .attr('r', r=> r.radius)
                     .attr('height', 50)
                     .attr('width', 50);
                 })
@@ -303,7 +365,7 @@ export class NetworkComponent implements OnInit {
     }
 
 
-   removePopovers () {
+    private removePopovers () {
         $('.popover').each(function(){ $(this).remove(); });
     }
 }
