@@ -15,6 +15,7 @@ export class FilterService {
     public includeFollowed: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     public sortBy: BehaviorSubject<string> = new BehaviorSubject<string>('');
     public sortDir: BehaviorSubject<string> = new BehaviorSubject<string>('desc');
+    public abc: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
     // encapsulate what we can
     private _genreDisplay: BehaviorSubject<string> = new BehaviorSubject<string>('');

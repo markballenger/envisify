@@ -47,6 +47,7 @@ import { FocusDirective } from './shared/focus/focus';
 import { GenreFilterComponent } from './genre-filter/genre-filter.component';
 import { SwipeablesComponent } from './shared/swipeable';
 import { MinMaxComponent } from './shared/minmax/minmax.component';
+import { AbcComponent } from './shared/abc/abc.component';
 
 import { ListItemComponent, GenreItemComponent, ArtistItemComponent, TrackItemComponent } from './shared/lists';
 import { BtnGroupComponent } from './shared/btn-group/btn.group.component';
@@ -93,7 +94,8 @@ import { BtnGroupComponent } from './shared/btn-group/btn.group.component';
     BtnGroupComponent,
     FocusDirective,
     SwipeablesComponent,
-    MinMaxComponent
+    MinMaxComponent,
+    AbcComponent
   ],
   providers: [
     UtilsService,
